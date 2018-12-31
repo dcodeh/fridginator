@@ -1,0 +1,137 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.dcodeh.fridginator</groupId>
+  <artifactId>fridginator</artifactId>
+  <version>0.2</version>
+
+  <name>fridginator</name>
+  <description>A web-based item sharing tool to help me and my roommates save money and fridge space.</description>
+
+  <properties>
+    <!-- General Properties -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jdk.version>1.8</jdk.version>
+
+    <!-- Maven Dependency Versions -->
+    <maven.compiler.version>3.7.0</maven.compiler.version>
+    <maven.assembly.version>3.1.0</maven.assembly.version>
+    <maven.exec.version>1.6.0</maven.exec.version>
+    
+    <!-- Application Dependency Versions -->
+    <spark.version>2.7.2</spark.version>
+    <spark.freemarker.version>2.7.2</spark.freemarker.version>
+    <freemarker.version>2.3.28</freemarker.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    
+    <!-- Test Dependency Versions -->
+    <maven.surefire.version>2.19.1</maven.surefire.version>
+  </properties>
+
+  <dependencies>
+    <!-- Spark Java, not to be confused with Apache Spark! -->
+    <dependency>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-core</artifactId>
+      <version>${spark.version}</version>
+    </dependency>
+
+    <!-- Spark Freemarker -->
+    <dependency>
+      <groupId>com.sparkjava</groupId>
+      <artifactId>spark-template-freemarker</artifactId>
+      <version>${spark.freemarker.version}</version>
+    </dependency>
+
+    <!-- Freemarker -->
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+      <version>${freemarker.version}</version>
+    </dependency>
+
+    <!-- Logging -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <!-- Build plugins -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.version}</version>
+        <configuration>
+          <source>${jdk.version}</source>
+          <target>${jdk.version}</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${maven.exec.version}</version>
+        <configuration>
+          <mainClass>fridginator.Fridginator</mainClass>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>${maven.assembly.version}</version>
+        <executions>
+          <execution>
+            <id>zip</id>
+            <configuration>
+              <descriptors>
+                <descriptor>src/assembly/zip.xml</descriptor>
+              </descriptors>
+              <finalName>fridginator_0-2</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
+            </configuration>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>zip-with-tests</id>
+            <configuration>
+              <descriptors>
+                <descriptor>src/assembly/zip-with-tests.xml</descriptor>
+              </descriptors>
+              <finalName>fridginator_0-2_tests</finalName>
+              <appendAssemblyId>false</appendAssemblyId>
+            </configuration>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Testing plugins -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.version}</version>
+        <configuration>
+          <includes>
+            <include>**/Test*.java</include>
+            <include>**/*Test.java</include>
+            <include>**/*Tests.java</include>
+            <include>**/*TestCase.java</include>
+          </includes>
+          <properties>
+            <includeTags>${test.tags}</includeTags>
+          </properties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
+</project>
