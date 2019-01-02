@@ -17,6 +17,8 @@ public class WebServer {
     
     // Session attributes
     public static final String SESSION_USER = "user";
+    public static final String SESSION_MESSAGE = "message";
+    public static final String MESSAGE_TYPE = "messageType";
     
     // GET URL Patterns
     public static final String HOME_URL = "/";
