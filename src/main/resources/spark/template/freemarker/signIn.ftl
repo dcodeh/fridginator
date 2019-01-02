@@ -16,6 +16,7 @@
         </#if>
     
         <div class="page">
+            <center><img src="/images/favicon.png"></center>
             <h1>Fridginator</h1>
 
             <form action="./signIn" method="POST">
