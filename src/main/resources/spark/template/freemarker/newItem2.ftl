@@ -32,7 +32,7 @@
                                 <td>${pq.getUnit()}</td>
                                 <td>${pq.getPrice()}</td>
                                 <td><input type="image" id="${pq.getQty()}"
-                                     src="/images/trash.png"></td>
+                                     src="/images/delete.png"></td>
                             </tr>
                         </#list>
                     </table>
