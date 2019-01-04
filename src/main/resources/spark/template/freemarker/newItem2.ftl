@@ -23,7 +23,7 @@
             <h2>${itemName}</h2>
 
             <form action="./removePQ" method="POST">
-                <#if hasPQs??>
+                <#if PQList??>
                     <h3>Purchasable Quantities</h3>
                     <table>
                         <#list PQList as pq>

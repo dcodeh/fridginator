@@ -140,10 +140,20 @@ table {
     border: 1px solid black;
 }
 
+table.items {
+    text-align: left;
+    margin-bottom: 25px;
+}
+
 tr {
     height: 32px;
 }
 
 td {
     padding:15px;
+}
+
+td.min {
+    width: 1%;
+    white-space: nowrap;
 }
