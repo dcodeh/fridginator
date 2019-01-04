@@ -132,3 +132,18 @@ textarea {
     border-style: solid;
     border-color: #fdede8;
 }
+
+table {
+    width: 100%;
+    display: inline-block;
+    box-shadow: 5px 10px 5px #dfdfdf;
+    border: 1px solid black;
+}
+
+tr {
+    height: 32px;
+}
+
+td {
+    padding:15px;
+}
