@@ -46,4 +46,31 @@ public class DB {
         return password;
     }
 
+    /**
+     * Return a user's id from their username.
+     * @param username The user to get the ID for
+     * @return The user's db id, or null if the user doesn't exist.
+     */
+    public Integer queryUserID(String username) {
+        Integer uid = null;
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder.append("select id from user where name = '")
+                    .append(username)
+                    .append("'")
+                    .append(" limit 1;");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                uid = set.getInt(1);
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return uid;
+    }
+
 }

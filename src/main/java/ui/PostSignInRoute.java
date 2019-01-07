@@ -5,11 +5,7 @@ import fridginator.DB;
 import fridginator.SessionMessageHelper;
 import fridginator.WebServer;
 import fridginator.SessionMessageHelper.MessageType;
-import spark.Request;
-import spark.Response;
-import spark.Route;
-import spark.Session;
-import spark.TemplateEngine;
+import spark.*;
 
 /**
  * Signs a user in
@@ -40,20 +36,21 @@ public class PostSignInRoute implements Route {
             // no such user!
             SessionMessageHelper.addSessionMessage(session, FAILURE_MESSAGE, MessageType.error);
             response.redirect(WebServer.HOME_URL);
-            return "";
         } else {
             // welcome back, amigo
             if(userPassword.equals(enteredPassword)) {
 
+                session.attribute(WebServer.SESSION_USER, db.queryUserID(enteredUsername));
+                SessionMessageHelper.addSessionMessage(session, "Welcome, " + enteredUsername, MessageType.info);
+                response.redirect(WebServer.MAIN_URL);
             } else {
                 // messed up your password!
                 SessionMessageHelper.addSessionMessage(session, FAILURE_MESSAGE, MessageType.error);
                 response.redirect(WebServer.HOME_URL);
-                return "";
             }
         }
 
-        return null;
+        return "";
     }
 
 }

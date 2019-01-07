@@ -1,39 +1,37 @@
 // Copyright (c) 2018 David Cody Burrows...See LICENSE file for details
 package ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import fridginator.Constants;
+import fridginator.DB;
 import fridginator.SessionMessageHelper;
 import fridginator.SessionMessageHelper.MessageType;
 import fridginator.WebServer;
-import spark.ModelAndView;
-import spark.Request;
-import spark.Response;
-import spark.Route;
-import spark.Session;
-import spark.TemplateEngine;
+import spark.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Get the signin page
+ * Get the main menu page
  * @author dcodeh 
  */
-public class GetSignInRoute implements Route {
-    
+public class GetMainRoute implements Route {
+
     public static final String TITLE_ATTR = "title";
     public static final String VERSION_ATTR = "version";
     public static final String RELEASE_ATTR = "release";
-    public static final String VIEW_NAME = "signIn.ftl";
+    public static final String VIEW_NAME = "main.ftl";
 
-    private static final String TITLE = "Sign In";
+    private static final String TITLE = "Menu";
     private static final String VERSION = Constants.VERSION_NUMBER;
     private static final String RELEASE = Constants.RELEASE_NAME;
-    
+
     private TemplateEngine templateEngine;
-    
-    public GetSignInRoute(TemplateEngine te) {
+    private DB db;
+
+    public GetMainRoute(DB db, TemplateEngine te) {
         templateEngine = te;
+        this.db = db;
     }
 
     @Override
@@ -48,14 +46,14 @@ public class GetSignInRoute implements Route {
         
         if(session.attribute(WebServer.SESSION_USER) != null) {
             // this person is already signed in
-           
-            // TODO dcodeh redirect to main page
-            SessionMessageHelper.addSessionMessage(session, "Welcome Back", MessageType.info);
-            response.redirect(WebServer.MAIN_URL);
-            return "";
-        } else {
+            int userId = session.attribute(WebServer.SESSION_USER);
+            SessionMessageHelper.addSessionMessage(session, "Your user id is: " + userId, MessageType.info);
             SessionMessageHelper.displaySessionMessages(session, vm);
             return templateEngine.render(new ModelAndView(vm, VIEW_NAME));
+        } else {
+            SessionMessageHelper.addSessionMessage(session, "You are not logged in.", MessageType.error);
+            response.redirect(WebServer.HOME_URL);
+            return "";
         }
     }
 

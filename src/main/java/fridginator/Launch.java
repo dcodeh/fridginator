@@ -43,17 +43,19 @@ public class Launch {
         } else {
             System.out.println("DONE");
         }
+
+        DB db = new DB(conn);
         
         // Start the Webserver
         System.out.println("Starting WebServer...");
         final TemplateEngine templateEngine = new FreeMarkerEngine();
-        final WebServer webServer = new WebServer(templateEngine);
+        final WebServer webServer = new WebServer(db, templateEngine);
         webServer.init();
         System.out.println("DONE");
         
         // do things
         try {
-            Thread.sleep(15000);
+            Thread.sleep(150000);
         } catch (InterruptedException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
