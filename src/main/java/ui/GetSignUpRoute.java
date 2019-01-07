@@ -12,26 +12,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Get the main menu page
+ * Get the sign up page
  * @author dcodeh 
  */
-public class GetMainRoute implements Route {
+public class GetSignUpRoute implements Route {
 
     public static final String TITLE_ATTR = "title";
     public static final String VERSION_ATTR = "version";
     public static final String RELEASE_ATTR = "release";
-    public static final String VIEW_NAME = "main.ftl";
+    public static final String VIEW_NAME = "signUp.ftl";
 
     private static final String TITLE = "Menu";
     private static final String VERSION = Constants.VERSION_NUMBER;
     private static final String RELEASE = Constants.RELEASE_NAME;
 
     private TemplateEngine templateEngine;
-    private DB db;
 
-    public GetMainRoute(DB db, TemplateEngine te) {
+    public GetSignUpRoute(TemplateEngine te) {
         templateEngine = te;
-        this.db = db;
     }
 
     @Override
@@ -46,13 +44,14 @@ public class GetMainRoute implements Route {
         
         if(session.attribute(WebServer.SESSION_USER) != null) {
             // this person is already signed in
+            SessionMessageHelper.addSessionMessage(session, "You must sign out before you can create a new user!", MessageType.error);
+            response.redirect(WebServer.MAIN_URL);
+        } else {
             SessionMessageHelper.displaySessionMessages(session, vm);
             return templateEngine.render(new ModelAndView(vm, VIEW_NAME));
-        } else {
-            SessionMessageHelper.addSessionMessage(session, "You are not logged in.", MessageType.error);
-            response.redirect(WebServer.HOME_URL);
-            return "";
         }
+
+        return "";
     }
 
 }

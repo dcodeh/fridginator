@@ -13,6 +13,7 @@
     
         <#if message??>
             <div class="${messageType}">${message}</div>
+            <br/>
         </#if>
     
         <div class="page">
@@ -21,6 +22,8 @@
 
             <form action="./signUp" method="POST">
                 Enter your account information. All fields are required.
+                <br/>
+                <input name="code" placeholder="Fridge Code" type="text"/>
                 <br/>
                 <input name="username" placeholder="Username" type="text"/>
                 <br/>
@@ -33,7 +36,7 @@
 
             <div class="info">
                 <p>You will not be able to create a user account unless you
-                   know the secret code. It's on the fridge
+                   know the Fridge Code. It's on the fridge
                    at the Pink House</p>
             </div>
         </div>

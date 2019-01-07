@@ -2,9 +2,7 @@
 package fridginator;
 
 import spark.TemplateEngine;
-import ui.GetMainRoute;
-import ui.GetSignInRoute;
-import ui.PostSignInRoute;
+import ui.*;
 
 import static spark.Spark.staticFiles;
 import static spark.Spark.port;
@@ -27,6 +25,8 @@ public class WebServer {
     public static final String HOME_URL = "/";
     public static final String POST_SIGN_IN = "/signIn";
     public static final String MAIN_URL = "/main";
+    public static final String SIGN_UP_URL = "/newUser";
+    public static final String POST_SIGN_UP = "/signUp";
 
     // TemplateEngine for rendering pages
     private final TemplateEngine templateEngine;
@@ -51,8 +51,10 @@ public class WebServer {
         
         get(HOME_URL, new GetSignInRoute(templateEngine));
         get(MAIN_URL, new GetMainRoute(db, templateEngine));
+        get(SIGN_UP_URL, new GetSignUpRoute(templateEngine));
 
         post(POST_SIGN_IN, new PostSignInRoute(db, templateEngine));
+        post(POST_SIGN_UP, new PostSignUpRoute(db, templateEngine));
     }
     
     /**

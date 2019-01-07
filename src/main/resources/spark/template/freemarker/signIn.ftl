@@ -13,6 +13,7 @@
     
         <#if message??>
             <div class="${messageType}">${message}</div>
+            <br/>
         </#if>
     
         <div class="page">
@@ -30,7 +31,7 @@
             </form>
             
             <br>
-            <a href="/signUp">New User</a>
+            <a href="/newUser">New User</a>
 
             <div class="info">
                 <p>Version ${version} | ${release}</p>
