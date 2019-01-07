@@ -48,7 +48,7 @@ public class GetSignInRoute implements Route {
         
         if(session.attribute(WebServer.SESSION_USER) != null) {
             // this person is already signed in
-            
+           
             // TODO dcodeh redirect to main page
             SessionMessageHelper.addSessionMessage(session, "Welcome Back", MessageType.info);
             return templateEngine.render(new ModelAndView(vm, VIEW_NAME));
