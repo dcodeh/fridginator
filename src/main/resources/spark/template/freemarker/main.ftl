@@ -20,18 +20,11 @@
             <center><img src="/images/favicon.png"></center>
             <h1>Fridginator</h1>
 
-            <form action="./signIn" method="POST">
-                <br/>
-                <button name="items" type="submit">Items</button>
-                <br/>
-                <button name="viewList" type="submit">View List</button>
-                <br/>
-                <button name="editList" type="submit">Edit Misc List</button>
-                <br/>
-                <button name="settings" type="submit">Settings</button>
-                <br/>
-                <button name="Sign Out" type="submit">Sign Out</button>
-            </form>
+            <a href="./getItems">Items</a><br/>
+            <a href="./getItems">View List</a><br/>
+            <a href="./getItems">Edit Misc List</a><br/>
+            <a href="./getItems">Settings</a><br/>
+            <a href="./signOut">Sign Out</a><br/>
 
             <div class="info">
                 <p>Version ${version} | ${release}</p>

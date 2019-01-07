@@ -27,6 +27,7 @@ public class WebServer {
     public static final String MAIN_URL = "/main";
     public static final String SIGN_UP_URL = "/newUser";
     public static final String POST_SIGN_UP = "/signUp";
+    public static final String GET_SIGN_OUT = "/signOut";
 
     // TemplateEngine for rendering pages
     private final TemplateEngine templateEngine;
@@ -52,6 +53,7 @@ public class WebServer {
         get(HOME_URL, new GetSignInRoute(templateEngine));
         get(MAIN_URL, new GetMainRoute(db, templateEngine));
         get(SIGN_UP_URL, new GetSignUpRoute(templateEngine));
+        get(GET_SIGN_OUT, new GetSignOutRoute(templateEngine));
 
         post(POST_SIGN_IN, new PostSignInRoute(db, templateEngine));
         post(POST_SIGN_UP, new PostSignUpRoute(db, templateEngine));
