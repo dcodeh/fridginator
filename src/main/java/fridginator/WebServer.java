@@ -21,13 +21,15 @@ public class WebServer {
     public static final String SESSION_MESSAGE = "message";
     public static final String MESSAGE_TYPE = "messageType";
     
-    // GET URL Patterns
+    // URL Patterns
     public static final String HOME_URL = "/";
     public static final String POST_SIGN_IN = "/signIn";
     public static final String MAIN_URL = "/main";
     public static final String SIGN_UP_URL = "/newUser";
     public static final String POST_SIGN_UP = "/signUp";
     public static final String GET_SIGN_OUT = "/signOut";
+    public static final String GET_EDIT_MISC = "/editMisc";
+    public static final String POST_UPDATE_MISC = "/updateMisc";
 
     // TemplateEngine for rendering pages
     private final TemplateEngine templateEngine;
@@ -54,9 +56,11 @@ public class WebServer {
         get(MAIN_URL, new GetMainRoute(db, templateEngine));
         get(SIGN_UP_URL, new GetSignUpRoute(templateEngine));
         get(GET_SIGN_OUT, new GetSignOutRoute(templateEngine));
+        get(GET_EDIT_MISC, new GetEditMiscListRoute(db, templateEngine));
 
         post(POST_SIGN_IN, new PostSignInRoute(db, templateEngine));
         post(POST_SIGN_UP, new PostSignUpRoute(db, templateEngine));
+        post(POST_UPDATE_MISC, new PostEditMiscListRoute(db, templateEngine));
     }
     
     /**

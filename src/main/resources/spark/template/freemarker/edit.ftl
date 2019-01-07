@@ -17,7 +17,7 @@
         <div class="page">
             <h1>Edit Misc. List</h1>
             <div class="edit">
-                <form action="./editList" method="POST">
+                <form action="./updateMisc" method="POST">
                     <textarea name="listText"><#if listContents??>${listContents}</#if></textarea>
                     <!-- Bottom Buttons -->
                     <button type="submit" name="save">Save</button>

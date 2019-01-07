@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 /**
  * This class abstracts all of the database operations
@@ -160,5 +161,122 @@ public class DB {
         }
 
         return success;
+    }
+
+    /**
+     * Gets a users' misc list items and puts them in a single string, with newlines 
+     * separating list items.
+     * 
+     * @param userID The user that owns the list 
+     * @return A user's misc list as a string
+     */
+    public String getMiscListContents(int userID) {
+        String list = "";
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("select line from misc_list where user_id=")
+                .append(userID)
+                .append(";");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                list += set.getString(1) + "\n";
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return list;
+    }
+    
+    /**
+     * Will return whether or not a user's line item will be checked or not.
+     * 
+     * @param userID The user's list to check
+     * @param lineItem The item to check 
+     * @return True if the item is checked, false if it is not, or is null
+     */
+    public boolean getMiscItemChecked(int userID, String lineItem) {
+        boolean checked = false;
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("select count(*) from misc_list where user_id=")
+                .append(userID)
+                .append(" and line = '")
+                .append(lineItem)
+                .append("'")
+                .append("and checked = true;");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                checked = set.getInt(1) > 0;
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        
+        return checked;
+    }
+
+    /**
+     * Removes all items from a user's misc list
+     * @param userID the user to remove records for.
+     */
+    public void wipeOutMiscList(int userID) {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("delete from misc_list where user_id = ")
+                .append(userID)
+                .append(";");
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+    }
+
+    /**
+     * Adds an item to a user's misc list.
+     * @param userID The user who owns the list
+     */
+    public void setMiscList(int userID, LinkedHashMap<String, Boolean> newList) {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("insert into misc_list (user_id, checked, line) values");
+            
+            boolean first = true;
+            for(String line : newList.keySet()) {
+                
+                if(!first) {
+                    builder.append(",");
+                } else {
+                    first = false;
+                }
+                
+                builder
+                    .append("(")
+                    .append(userID)
+                    .append(",")
+                    .append(newList.get(line))
+                    .append(",'")
+                    .append(line)
+                    .append("')");
+            }
+            builder.append(";");
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
     }
 }
