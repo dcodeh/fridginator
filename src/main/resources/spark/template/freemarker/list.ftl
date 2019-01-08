@@ -12,6 +12,7 @@
     
         <#if message??>
             <div class="${messageType}">${message}</div>
+            <br/>
         </#if>
         
         <div class="page">

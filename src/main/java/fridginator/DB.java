@@ -1,11 +1,15 @@
 // Copyright (c) 2018 David Cody Burrows...See LICENSE file for details
 package fridginator;
 
+import model.MiscItem;
+import model.SharedItem;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
@@ -278,5 +282,76 @@ public class DB {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
+    }
+
+    /**
+     * Returns all of the misc items in a user's list as a convenient ArrayList
+     * of MiscItem objects.
+     *
+     * @param userID The ID of the user that owns the list to return.
+     * @return An ArrayList containing MiscItem objects based on the ones in the user's list.
+     */
+    public ArrayList<MiscItem> getMiscItemsList(int userID) {
+        ArrayList<MiscItem> items = new ArrayList<>();
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+
+            builder
+                .append("select checked, line from misc_list where user_id=")
+                .append(userID)
+                .append(";");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                items.add(new MiscItem(set.getBoolean(1), set.getString(2)));
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return items;
+    }
+
+    public ArrayList<SharedItem> getSharedItemsList(int userID) {
+        ArrayList<SharedItem> items = new ArrayList<>();
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+
+            builder
+                .append("select i.name, checked, num, pq.qty, i.unit, pq.price from shared_list s")
+                .append(" join purchasable_quantity pq on pq.id=s.pq_id")
+                .append(" join item i on pq.item_id=i.id")
+                .append(" where s.user_id=")
+                .append(userID)
+                .append(" and s.confirmed=true;");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                String name = set.getString(1);
+                boolean checked = set.getBoolean(2);
+                int num = set.getInt(3);
+                float qty = set.getFloat(4);
+                String unit = set.getString(5);
+                float price = set.getFloat(6);
+
+                String line = String.format("%.2f %s %s ~$%.2f",
+                                            num * qty, // total qty for this line...condense 2x 0.5 gal milk into 1x 1 gal
+                                            unit,
+                                            name,
+                                            num * price); // total price...see above
+
+                items.add(new SharedItem(checked, name, line));
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return items;
     }
 }

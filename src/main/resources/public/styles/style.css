@@ -78,12 +78,12 @@ input {
     left: 0;
     height: 22px;
     width: 22px;
-    background-color: #fdede8;
+    background-color: #DFDFFF;
     border-radius: 4px;
 }
 
 .container input:checked ~ .checkmark {
-    background-color: #DD4814;
+    background-color: #102399;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */

@@ -21,7 +21,7 @@
             <h1>Fridginator</h1>
 
             <a href="./getItems">Items</a><br/>
-            <a href="./getItems">View List</a><br/>
+            <a href="./list">View List</a><br/>
             <a href="./editMisc">Edit Misc List</a><br/>
             <a href="./getItems">Settings</a><br/>
             <a href="./signOut">Sign Out</a><br/>

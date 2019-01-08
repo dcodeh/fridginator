@@ -30,6 +30,7 @@ public class WebServer {
     public static final String GET_SIGN_OUT = "/signOut";
     public static final String GET_EDIT_MISC = "/editMisc";
     public static final String POST_UPDATE_MISC = "/updateMisc";
+    public static final String GET_LIST = "/list";
 
     // TemplateEngine for rendering pages
     private final TemplateEngine templateEngine;
@@ -57,6 +58,7 @@ public class WebServer {
         get(SIGN_UP_URL, new GetSignUpRoute(templateEngine));
         get(GET_SIGN_OUT, new GetSignOutRoute(templateEngine));
         get(GET_EDIT_MISC, new GetEditMiscListRoute(db, templateEngine));
+        get(GET_LIST, new GetListRoute(db, templateEngine));
 
         post(POST_SIGN_IN, new PostSignInRoute(db, templateEngine));
         post(POST_SIGN_UP, new PostSignUpRoute(db, templateEngine));
