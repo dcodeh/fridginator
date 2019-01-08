@@ -80,7 +80,7 @@
                     <table class="items">
                         <#list unsharedItems as item>
                             <tr>
-                                <td>${item.getName}</td>
+                                <td>${item.getName()}</td>
                                 <td class="min">
                                     <form action="./editItem" method="GET">
                                         <input type="hidden" name="itemID" value="${item.getID()}" />
