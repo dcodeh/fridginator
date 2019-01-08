@@ -20,11 +20,13 @@
             <center><img src="/images/favicon.png"></center>
             <h1>Fridginator</h1>
 
-            <a href="./getItems">Items</a><br/>
-            <a href="./list">View List</a><br/>
-            <a href="./editMisc">Edit Misc List</a><br/>
-            <a href="./getItems">Settings</a><br/>
-            <a href="./signOut">Sign Out</a><br/>
+            <form>
+                <a href="./getItems" class="button">Items</a><br/>
+                <a href="./list" class="button">View List</a><br/>
+                <a href="./editMisc" class="button">Edit Misc List</a><br/>
+                <a href="./getItems" class="button">Settings</a><br/>
+                <a href="./signOut" class="button">Sign Out</a><br/>
+            </form>
 
             <div class="info">
                 <p>Version ${version} | ${release}</p>
