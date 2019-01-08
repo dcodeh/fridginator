@@ -13,12 +13,13 @@
     
         <#if message??>
             <div class="${messageType}">${message}</div>
+            <br/>
         </#if>
     
         <div class="page">
             <h1>Items</h1>
 
-            <form action="./item" method="POST">
+            <form> <!-- just here for formatting consistency -->
                 <#if sharedItems??>
                     <h2>Shared</h2>
                     <#list sharedItems as item>
@@ -28,10 +29,16 @@
                                 <td colspan="2"><b>${item.getName()}</b>
                                     </br>${item.getWeeklyUsageString()}</td>
                                 <td class="min">
-                                    <input type="image" name="edit_${item.getName()}" src="gear.png">
+                                    <form action="./editItem" method="GET">
+                                        <input type="hidden" name="itemID" value="${item.getID()}" />
+                                        <input type="image" src="gear.png">
+                                    </form>
                                 </td>
                                 <td class="min">
-                                    <input type="image" name="unshare_${item.getName()}" src="delete.png">
+                                    <form action="./unshareItem" method="GET">
+                                        <input type="hidden" name="itemID" value="${item.getID()}" />
+                                        <input type="image" src="delete.png">
+                                    </form>
                                 </td>
                             </tr>
                             <tr>
@@ -74,8 +81,18 @@
                         <#list unsharedItems as item>
                             <tr>
                                 <td>${item.getName}</td>
-                                <td class="min"><input type="image" name="edit_${item.getName}" src="gear.png"></td>
-                                <td class="min"><input type="image" name="share_${item.getName}" src="add.png"></td>
+                                <td class="min">
+                                    <form action="./editItem" method="GET">
+                                        <input type="hidden" name="itemID" value="${item.getID()}" />
+                                        <input type="image" src="gear.png">
+                                    </form>
+                                </td>
+                                <td class="min">
+                                    <form action="./shareItem" method="GET">
+                                        <input type="hidden" name="itemID" value="${item.getID()}" />
+                                        <input type="image" src="add.png">
+                                    </form>
+                                </td>
                             </tr>
                         </#list>
                     </table>
