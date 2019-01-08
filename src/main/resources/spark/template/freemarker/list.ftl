@@ -22,7 +22,7 @@
                 <p>Inventory will not update until you hit Save!</p>
             </div>
 
-            <form action="./list" method="POST">
+            <form action="./updateList" method="POST">
                 <#if miscItems??>
                     <h2>Misc. Items</h2>
                 <#else>
@@ -35,9 +35,9 @@
                         <#list miscItems as item>
                             <label class="container">${item.getLine()}
                                 <#if item.getIsChecked()>
-                                    <input type="checkbox" name="${item.getLine()}" checked="checked">
+                                    <input type="checkbox" name="m_${item.getID()}" checked="checked">
                                 <#else>
-                                    <input type="checkbox" name="${item.getLine()}">
+                                    <input type="checkbox" name="m_${item.getID()}">
                                 </#if>
                                 <span class="checkmark"></span>
                             </label>
@@ -58,9 +58,9 @@
                         <#list sharedItems as item>
                             <label class="container">${item.getLine()}
                                 <#if item.getIsChecked()>
-                                    <input type="checkbox" name="${item.getName()}" checked="checked">
+                                    <input type="checkbox" name="s_${item.getID()}" checked="checked">
                                 <#else>
-                                    <input type="checkbox" name="${item.getName()}"> 
+                                    <input type="checkbox" name="s_${item.getID()}">
                                 </#if>
                                 <span class="checkmark"></span>
                             </label>

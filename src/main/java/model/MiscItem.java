@@ -15,10 +15,12 @@ public class MiscItem {
 
     private boolean checked;
     private String line;
+    private int id;
 
-    public MiscItem(boolean checked, String line) {
+    public MiscItem(boolean checked, String line, int id) {
         this.checked = checked;
         this.line = line;
+        this.id = id;
     }
 
     public String getLine() {
@@ -27,6 +29,10 @@ public class MiscItem {
 
     public boolean getIsChecked() {
         return checked;
+    }
+
+    public int getID() {
+        return id;
     }
 
 }

@@ -16,11 +16,13 @@ public class SharedItem {
     private boolean checked;
     private String name;
     private String line;
+    private int id;
 
-    public SharedItem(boolean checked, String name, String line) {
+    public SharedItem(boolean checked, String name, String line, int id) {
         this.checked = checked;
         this.name = name;
         this.line = line;
+        this.id = id;
     }
 
     public String getName() {
@@ -33,6 +35,10 @@ public class SharedItem {
 
     public boolean getIsChecked() {
         return checked;
+    }
+
+    public int getID() {
+        return id;
     }
 
 }

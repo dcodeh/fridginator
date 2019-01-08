@@ -299,13 +299,13 @@ public class DB {
             StringBuilder builder = new StringBuilder();
 
             builder
-                .append("select checked, line from misc_list where user_id=")
+                .append("select checked, line, id from misc_list where user_id=")
                 .append(userID)
                 .append(";");
 
             ResultSet set = s.executeQuery(builder.toString());
             while(set.next()) {
-                items.add(new MiscItem(set.getBoolean(1), set.getString(2)));
+                items.add(new MiscItem(set.getBoolean(1), set.getString(2), set.getInt(3)));
             }
 
         } catch (SQLException sqle) {
@@ -338,6 +338,7 @@ public class DB {
                 float qty = set.getFloat(4);
                 String unit = set.getString(5);
                 float price = set.getFloat(6);
+                int id = set.getInt(7);
 
                 String line = String.format("%.2f %s %s ~$%.2f",
                                             num * qty, // total qty for this line...condense 2x 0.5 gal milk into 1x 1 gal
@@ -345,7 +346,120 @@ public class DB {
                                             name,
                                             num * price); // total price...see above
 
-                items.add(new SharedItem(checked, name, line));
+                items.add(new SharedItem(checked, name, line, id));
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return items;
+    }
+
+    /**
+     * Updates the checked status of a Misc List item.
+     *
+     * @param id The ID of the misc list item as a String
+     * @param checked True to set checked. False otherwise.
+     */
+    public void setMiscCheckStatus(String id, boolean checked) {
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+
+            builder
+                .append("update misc_list set checked = ")
+                .append(checked)
+                .append(" where id = ")
+                .append(id)
+                .append(";");
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Updates the checked status of a Shared List item.
+     *
+     * @param id The ID of the shared item (as a String)
+     * @param checked True to set checked. False otherwise.
+     */
+    public void setSharedCheckStatus(String id, boolean checked) {
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+
+            /*
+           update shared_list set checked = true where id = (select id from shared_list join purchasable_quantity pq on pq.id=pq_id join item i on i.id=pq.id where i.name='lasagna');
+             */
+            builder
+                .append("update shared_list set checked = ")
+                .append(checked)
+                .append("where id = ")
+                .append(id)
+                .append(";");
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Get the IDs of all of the shared items that belong to a user
+     * @param userID The user in question
+     * @return A list of IDs as strings
+     */
+    public ArrayList<String> getSharedItemIDs(int userID) {
+        ArrayList<String> items = new ArrayList<>();
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+
+            builder
+                .append("select id from shared_list where user_id = ")
+                .append(userID)
+                .append(";");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                items.add(set.getString(1));
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return items;
+    }
+
+    /**
+     * Get the IDs of all of the misc items that belong to a user
+     * @param userID The user in question
+     * @return A list of IDs as strings
+     */
+    public ArrayList<String> getMiscItemIDs(int userID) {
+        ArrayList<String> items = new ArrayList<>();
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+
+            builder
+                    .append("select id from misc_list where user_id = ")
+                    .append(userID)
+                    .append(";");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                items.add(set.getString(1));
             }
 
         } catch (SQLException sqle) {

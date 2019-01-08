@@ -31,6 +31,7 @@ public class WebServer {
     public static final String GET_EDIT_MISC = "/editMisc";
     public static final String POST_UPDATE_MISC = "/updateMisc";
     public static final String GET_LIST = "/list";
+    public static final String POST_LIST = "/updateList";
 
     // TemplateEngine for rendering pages
     private final TemplateEngine templateEngine;
@@ -63,6 +64,7 @@ public class WebServer {
         post(POST_SIGN_IN, new PostSignInRoute(db, templateEngine));
         post(POST_SIGN_UP, new PostSignUpRoute(db, templateEngine));
         post(POST_UPDATE_MISC, new PostEditMiscListRoute(db, templateEngine));
+        post(POST_LIST, new PostListRoute(db, templateEngine));
     }
     
     /**
