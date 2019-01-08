@@ -18,19 +18,19 @@
     
         <div class="page">
             <center><img src="/images/favicon.png"></center>
-            <h1>Fridginator</h1>
+            <h1>Settings</h1>
 
-            <form>
-                <a href="./items" class="button">Items</a><br/>
-                <a href="./list" class="button">View List</a><br/>
-                <a href="./editMisc" class="button">Edit Misc List</a><br/>
-                <a href="./settings" class="button">Settings</a><br/>
-                <a href="./signOut" class="button">Sign Out</a><br/>
+            <form action="./updateSettings" method="POST">
+                Change your password using the fields below. That's all you can do here at the moment ;)
+                <br/>
+                <input name="username" placeholder="Username" type="text" value="${username}"/>
+                <br/>
+                <input name="password" placeholder="Password" type="password" value="${password}"/>
+                <br/>
+                <input name="password2" placeholder="Retype Password" type="password"/>
+                <br/>
+                <button type="submit">Submit</button>
             </form>
-
-            <div class="info">
-                <p>Version ${version} | ${release}</p>
-            </div>
         </div>
     </body>
 </html>

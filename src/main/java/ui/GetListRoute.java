@@ -43,7 +43,12 @@ public class GetListRoute implements Route {
     public Object handle(Request request, Response response) throws Exception {
         final Session session = request.session();
         final Map<String, Object> vm = new HashMap<>();
-        
+
+        // to prevent browser from caching this page.
+        response.header("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.header("Pragma", "no-cache");
+        response.header("Expires", "0");
+
         // populate the fields in the ftl template
         vm.put(TITLE_ATTR, TITLE);
         vm.put(VERSION_ATTR, VERSION);
