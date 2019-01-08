@@ -11,13 +11,13 @@ package model;
  *
  * @author dcodeh
  */
-public class MiscItem {
+public class MiscListItem {
 
     private boolean checked;
     private String line;
     private int id;
 
-    public MiscItem(boolean checked, String line, int id) {
+    public MiscListItem(boolean checked, String line, int id) {
         this.checked = checked;
         this.line = line;
         this.id = id;
@@ -34,5 +34,4 @@ public class MiscItem {
     public int getID() {
         return id;
     }
-
 }

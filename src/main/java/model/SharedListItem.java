@@ -11,14 +11,14 @@ package model;
  *
  * @author dcodeh
  */
-public class SharedItem {
+public class SharedListItem {
 
     private boolean checked;
     private String name;
     private String line;
     private int id;
 
-    public SharedItem(boolean checked, String name, String line, int id) {
+    public SharedListItem(boolean checked, String name, String line, int id) {
         this.checked = checked;
         this.name = name;
         this.line = line;

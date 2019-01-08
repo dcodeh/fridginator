@@ -6,8 +6,8 @@ import fridginator.DB;
 import fridginator.SessionMessageHelper;
 import fridginator.SessionMessageHelper.MessageType;
 import fridginator.WebServer;
-import model.MiscItem;
-import model.SharedItem;
+import model.MiscListItem;
+import model.SharedListItem;
 import spark.*;
 
 import java.util.ArrayList;
@@ -60,13 +60,13 @@ public class GetListRoute implements Route {
             int userID = session.attribute(WebServer.SESSION_USER);
 
             // get the user's misc list
-            ArrayList<MiscItem> miscItems = db.getMiscItemsList(userID);
+            ArrayList<MiscListItem> miscItems = db.getMiscItemsList(userID);
             if(!miscItems.isEmpty()) {
                 vm.put(MISC_LIST, miscItems);
             }
 
             // get the user's shared list
-            ArrayList<SharedItem> sharedItems = db.getSharedItemsList(userID);
+            ArrayList<SharedListItem> sharedItems = db.getSharedItemsList(userID);
             if(!sharedItems.isEmpty()) {
                 vm.put(SHARED_LIST, sharedItems);
             }

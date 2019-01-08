@@ -3,12 +3,9 @@ package ui;
 
 import fridginator.DB;
 import fridginator.WebServer;
-import model.MiscItem;
-import model.SharedItem;
 import spark.*;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 /**
  * Updates the checked/unchecked status of a user's list

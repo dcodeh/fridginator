@@ -1,8 +1,8 @@
 // Copyright (c) 2018 David Cody Burrows...See LICENSE file for details
 package fridginator;
 
-import model.MiscItem;
-import model.SharedItem;
+import model.MiscListItem;
+import model.SharedListItem;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -286,13 +286,13 @@ public class DB {
 
     /**
      * Returns all of the misc items in a user's list as a convenient ArrayList
-     * of MiscItem objects.
+     * of MiscListItem objects.
      *
      * @param userID The ID of the user that owns the list to return.
-     * @return An ArrayList containing MiscItem objects based on the ones in the user's list.
+     * @return An ArrayList containing MiscListItem objects based on the ones in the user's list.
      */
-    public ArrayList<MiscItem> getMiscItemsList(int userID) {
-        ArrayList<MiscItem> items = new ArrayList<>();
+    public ArrayList<MiscListItem> getMiscItemsList(int userID) {
+        ArrayList<MiscListItem> items = new ArrayList<>();
 
         try {
             Statement s = conn.createStatement();
@@ -305,7 +305,7 @@ public class DB {
 
             ResultSet set = s.executeQuery(builder.toString());
             while(set.next()) {
-                items.add(new MiscItem(set.getBoolean(1), set.getString(2), set.getInt(3)));
+                items.add(new MiscListItem(set.getBoolean(1), set.getString(2), set.getInt(3)));
             }
 
         } catch (SQLException sqle) {
@@ -315,8 +315,8 @@ public class DB {
         return items;
     }
 
-    public ArrayList<SharedItem> getSharedItemsList(int userID) {
-        ArrayList<SharedItem> items = new ArrayList<>();
+    public ArrayList<SharedListItem> getSharedItemsList(int userID) {
+        ArrayList<SharedListItem> items = new ArrayList<>();
 
         try {
             Statement s = conn.createStatement();
@@ -346,7 +346,7 @@ public class DB {
                                             name,
                                             num * price); // total price...see above
 
-                items.add(new SharedItem(checked, name, line, id));
+                items.add(new SharedListItem(checked, name, line, id));
             }
 
         } catch (SQLException sqle) {
