@@ -605,6 +605,13 @@ public class DB {
         return unit;
     }
 
+    /**
+     * Shares an item with a user
+     * @param userID The user to add to the item
+     * @param itemID The item to share 
+     * @param usage The user's expected weekly usage
+     * @return true if successful. False otherwise.
+     */
     public boolean shareItemWithUser(int userID, String itemID, float usage) {
         boolean success = true;
         try {
@@ -621,20 +628,66 @@ public class DB {
                 .append(",")
                 .append(userID)
                 .append(");");
+            
+            // TODO dcodeh recalulate usages and things!
 
             s.executeUpdate(insertBuilder.toString());
 
             // keep track of the number of users
             StringBuilder auditBuilder = new StringBuilder();
             auditBuilder
-                    .append("insert into audit (date, message, user_id) values")
-            .append("(")
-            .append("'" + timestampFormat.format(new Date()) + "'")
-            .append(",")
-            .append("'Sharing item " + itemID + "'")
-            .append(",")
-            .append(userID)
-            .append(");");
+                .append("insert into audit (date, message, user_id) values")
+                .append("(")
+                .append("'" + timestampFormat.format(new Date()) + "'")
+                .append(",")
+                .append("'Sharing item " + itemID + "'")
+                .append(",")
+                .append(userID)
+                .append(");");
+
+            s.executeUpdate(auditBuilder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            success = false;
+        }
+
+        return success;
+    }
+
+    /**
+     * Unshare an item for a specific user.
+     * 
+     * @param userID The user to remove from the item
+     * @param itemID The item in question
+     * @return True if successful, false otherwise.
+     */
+    public boolean unshareItem(int userID, String itemID) {
+        boolean success = true;
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder insertBuilder = new StringBuilder();
+            insertBuilder
+                .append("delete from sharing where item_id=")
+                .append(itemID)
+                .append(" and user_id=")
+                .append(userID)
+                .append(";");
+            
+            // TODO dcodeh recalculate things!
+
+            s.executeUpdate(insertBuilder.toString());
+
+            // keep track of the number of users
+            StringBuilder auditBuilder = new StringBuilder();
+            auditBuilder
+                .append("insert into audit (date, message, user_id) values")
+                .append("(")
+                .append("'" + timestampFormat.format(new Date()) + "'")
+                .append(",")
+                .append("'Unsharing item " + itemID + "'")
+                .append(",")
+                .append(userID)
+                .append(");");
 
             s.executeUpdate(auditBuilder.toString());
         } catch (SQLException sqle) {
