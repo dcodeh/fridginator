@@ -69,6 +69,7 @@ public class WebServer {
         post(POST_SIGN_UP, new PostSignUpRoute(db, templateEngine));
         post(POST_UPDATE_MISC, new PostEditMiscListRoute(db, templateEngine));
         post(POST_LIST, new PostListRoute(db, templateEngine));
+        post(SHARE_ITEM, new PostShareItemRoute(db, templateEngine));
     }
     
     /**

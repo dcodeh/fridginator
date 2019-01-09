@@ -101,14 +101,14 @@ create table sharing(
 
 create table inventory(
     id          integer primary key,
-    qty         real,
-    point       boolean, -- hard data point or not for usage calculation
-    restock     boolean, -- this update represents a restock
-    auto        boolean, -- this update represents consumption
+    qty         real default 0,
+    point       boolean default false, -- hard data point or not for usage calculation
+    restock     boolean default false, -- this update represents a restock
+    auto        boolean default false, -- this update represents consumption
     time        timestamp,
 
     -- foreign keys
-    user_id     integer,
+    user_id     integer default null,
     item_id     integer,
 
     foreign key (user_id) references user(id),

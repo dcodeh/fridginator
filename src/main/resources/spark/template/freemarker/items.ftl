@@ -43,7 +43,7 @@
                             </tr>
                             <tr>
                                 <td class="min">
-                                    <#switch item.getQuantityforImage()>
+                                    <#switch item.getQuantityForImage()>
                                         <#case "0">
                                             <image src="/images/empty.png">
                                         <#break>

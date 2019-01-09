@@ -20,6 +20,7 @@
             <h1>Share ${itemName}</h1>
 
             <form action="./shareItem" method="POST">
+                <input type="hidden" name="itemID" value="${itemID}" />
                 Enter your expected weekly usage of this item. This is only
                 an estimate.
                 <br/>
@@ -29,7 +30,6 @@
                 <button type="submit" name="save">Save</button>
                 <br/>
                 <button type="submit" name="abort">Abort</button>
-                <input type="hidden" name="itemID" value="${itemID}" />
             </form>
         </div>
     </body>

@@ -82,4 +82,11 @@ public class SharedItem {
         warningMessage = null;
     }
 
+    public boolean hasWarning() {
+        return hasWarning;
+    }
+
+    public String getWarningMessage() {
+        return warningMessage;
+    }
 }

@@ -23,6 +23,7 @@ public class DB {
     
     private Connection conn;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SS"); // S is millisecond
     
     public DB(Connection conn) {
         this.conn = conn;
@@ -494,8 +495,8 @@ public class DB {
                 .append(", i.num_pq, pq.qty, ")
                 .append("(select sum(actual) from sharing where item_id=i.id)")
                 .append(", i.unit from sharing s")
-                    .append(" join item i on i.id=s.item_id")
-                    .append(" join purchasable_quantity pq on i.full_pq_id=pq.id")
+                .append(" join item i on i.id=s.item_id")
+                .append(" left join purchasable_quantity pq on i.full_pq_id=pq.id")
                 .append(" where s.user_id =")
                 .append(userID)
                 .append(";");
@@ -530,7 +531,7 @@ public class DB {
 
             builder
                 .append("select i.name, i.id from item i where i.id not in")
-                .append("(select item_id from sharing where user_id <> ")
+                .append("(select item_id from sharing where user_id = ")
                 .append(userID)
                 .append(")")
                 .append(";");
@@ -602,5 +603,45 @@ public class DB {
         }
 
         return unit;
+    }
+
+    public boolean shareItemWithUser(int userID, String itemID, float usage) {
+        boolean success = true;
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder insertBuilder = new StringBuilder();
+            insertBuilder
+                .append("insert into sharing (expected, actual, item_id, user_id) values")
+                .append("(")
+                .append(usage)
+                .append(",")
+                .append(usage) // init actual to expected...this will be updated by the system over time
+                .append(",")
+                .append(itemID)
+                .append(",")
+                .append(userID)
+                .append(");");
+
+            s.executeUpdate(insertBuilder.toString());
+
+            // keep track of the number of users
+            StringBuilder auditBuilder = new StringBuilder();
+            auditBuilder
+                    .append("insert into audit (date, message, user_id) values")
+            .append("(")
+            .append("'" + timestampFormat.format(new Date()) + "'")
+            .append(",")
+            .append("'Sharing item " + itemID + "'")
+            .append(",")
+            .append(userID)
+            .append(");");
+
+            s.executeUpdate(auditBuilder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            success = false;
+        }
+
+        return success;
     }
 }
