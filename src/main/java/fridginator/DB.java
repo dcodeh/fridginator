@@ -549,4 +549,58 @@ public class DB {
 
         return items;
     }
+
+    /**
+     * Get an item's name by ID
+     * @param itemID The item's ID as a string
+     * @return The item's name, if a valid ID is passed in. null otherwise.
+     */
+    public String getItemName(String itemID) {
+        String name = null;
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("select name from item ")
+                .append("where id=")
+                .append(itemID);
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                name = set.getString(1);
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return name;
+    }
+
+    /**
+     * Get an item's unit
+     * @param itemID an Item ID as a string
+     * @return The unit string of an item, if the Id is valid. Otherwise null;
+     */
+    public String getUnit(String itemID) {
+        String unit = null;
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                    .append("select unit from item ")
+                    .append("where id=")
+                    .append(itemID);
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                unit = set.getString(1);
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return unit;
+    }
 }

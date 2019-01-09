@@ -13,6 +13,7 @@
     
         <#if message??>
             <div class="${messageType}">${message}</div>
+            <br/>
         </#if>
     
         <div class="page">
@@ -23,10 +24,12 @@
                 an estimate.
                 <br/>
                 <input name="usage" placeholder="Exp. Usage" type="number"/>
+                ${unit} per week
                 <br/>
-                <button type="submit">Save</button>
+                <button type="submit" name="save">Save</button>
                 <br/>
-                <button type="submit">Abort</button>
+                <button type="submit" name="abort">Abort</button>
+                <input type="hidden" name="itemID" value="${itemID}" />
             </form>
         </div>
     </body>
