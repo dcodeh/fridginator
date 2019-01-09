@@ -161,6 +161,9 @@ public class DB {
                 .append(");");
 
             s.executeUpdate(builder.toString());
+
+            // keep track of the number of users
+            s.executeUpdate("update fridge set users = users + 1");
         } catch (SQLException sqle) {
             sqle.printStackTrace();
             success = false;
