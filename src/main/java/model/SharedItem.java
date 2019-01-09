@@ -16,17 +16,19 @@ public class SharedItem {
     private String name;
     private int id;
     private float quantity;
-    private float fullQuantity;
+    private float fullMult;
+    private float fullQty;
     private float weeklyUsage;
     private String unit;
     private boolean hasWarning;
     private String warningMessage;
 
-    public SharedItem(String name, int id, float quantity, float fullQuantity, float weeklyUsage, String unit) {
+    public SharedItem(String name, int id, float quantity, float fullMult, float fullQty, float weeklyUsage, String unit) {
         this.name = name;
         this.id = id;
         this.quantity = quantity;
-        this.fullQuantity = fullQuantity;
+        this.fullMult = fullMult;
+        this.fullQty = fullQty;
         this.weeklyUsage = weeklyUsage;
         this.unit = unit;
         this.hasWarning = false;
@@ -46,6 +48,7 @@ public class SharedItem {
     }
 
     public String getQuantityForImage() {
+        float fullQuantity = fullMult * fullQty;
         float percentage = quantity/fullQuantity;
 
         if(percentage > 0.85) {

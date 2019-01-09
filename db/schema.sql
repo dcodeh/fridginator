@@ -26,7 +26,13 @@ create table item(
     id          integer primary key,
     name        varchar(24),
     weekly      boolean, -- might need to change to integer
-    unit        varchar(10)
+    unit        varchar(10),
+    num_pq      integer,
+
+    -- foreign keys
+    full_pq_id  integer,
+
+    foreign key (full_pq_id) references purchasable_quantity(id)
 );
 
 create table purchasable_quantity(
