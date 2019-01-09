@@ -6,8 +6,11 @@ import fridginator.DB;
 import fridginator.SessionMessageHelper;
 import fridginator.SessionMessageHelper.MessageType;
 import fridginator.WebServer;
+import model.SharedItem;
+import model.UnsharedItem;
 import spark.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +28,8 @@ public class GetItemsRoute implements Route {
     private static final String TITLE = "Items";
     private static final String VERSION = Constants.VERSION_NUMBER;
     private static final String RELEASE = Constants.RELEASE_NAME;
+    private static final String SHARED_ITEMS = "sharedItems";
+    private static final String UNSHARED_ITEMS = "unsharedItems";
 
     private TemplateEngine templateEngine;
     private DB db;
@@ -46,6 +51,19 @@ public class GetItemsRoute implements Route {
         
         if(session.attribute(WebServer.SESSION_USER) != null) {
             // this person is already signed in
+
+            int userID = session.attribute(WebServer.SESSION_USER);
+
+            ArrayList<SharedItem> sharedItems = db.getSharedItems(userID);
+            if(!sharedItems.isEmpty()) {
+                vm.put(SHARED_ITEMS, sharedItems);
+            }
+
+            ArrayList<UnsharedItem> unsharedItems = db.getUnsharedItems(userID);
+            if(!unsharedItems.isEmpty()) {
+                vm.put(UNSHARED_ITEMS, unsharedItems);
+            }
+
             SessionMessageHelper.displaySessionMessages(session, vm);
             return templateEngine.render(new ModelAndView(vm, VIEW_NAME));
         } else {

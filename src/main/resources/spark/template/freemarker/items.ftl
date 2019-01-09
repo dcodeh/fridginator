@@ -31,13 +31,13 @@
                                 <td class="min">
                                     <form action="./editItem" method="GET">
                                         <input type="hidden" name="itemID" value="${item.getID()}" />
-                                        <input type="image" src="gear.png">
+                                        <input type="image" src="/images/gear.png">
                                     </form>
                                 </td>
                                 <td class="min">
                                     <form action="./unshareItem" method="GET">
                                         <input type="hidden" name="itemID" value="${item.getID()}" />
-                                        <input type="image" src="delete.png">
+                                        <input type="image" src="/images/delete.png">
                                     </form>
                                 </td>
                             </tr>
@@ -45,19 +45,19 @@
                                 <td class="min">
                                     <#switch item.getQuantityforImage()>
                                         <#case "0">
-                                            <image src="empty.png">
+                                            <image src="/images/empty.png">
                                         <#break>
                                         <#case "1">
-                                            <image src="quarter.png">
+                                            <image src="/images/quarter.png">
                                         <#break>
                                         <#case "2">
-                                            <image src="half.png">
+                                            <image src="/images/half.png">
                                         <#break>
                                         <#case "3">
-                                            <image src="threequarters.png">
+                                            <image src="/images/threequarters.png">
                                         <#break>
                                         <#case "4">
-                                            <image src="full.png">
+                                            <image src="/images/full.png">
                                         <#break>
                                     </#switch>
                                 </td>
@@ -65,7 +65,7 @@
                             </tr>
                             <#if item.hasWarning()>
                                 <tr>
-                                    <td class="min"><img src="warning.png"></td>
+                                    <td class="min"><img src="/images/warning.png"></td>
                                     <td colspan="3">${item.getWarningMessage()}</td>
                                 </tr>
                             </#if>
@@ -84,13 +84,13 @@
                                 <td class="min">
                                     <form action="./editItem" method="GET">
                                         <input type="hidden" name="itemID" value="${item.getID()}" />
-                                        <input type="image" src="gear.png">
+                                        <input type="image" src="/images/gear.png">
                                     </form>
                                 </td>
                                 <td class="min">
                                     <form action="./shareItem" method="GET">
                                         <input type="hidden" name="itemID" value="${item.getID()}" />
-                                        <input type="image" src="add.png">
+                                        <input type="image" src="/images/add.png">
                                     </form>
                                 </td>
                             </tr>
@@ -99,10 +99,8 @@
                 <#else>
                     <h2>Not Shared (none)</h2>
                 </#if>
-                <br/>
-                <button type="submit">New Item</button>
-                <br/>
-                <button type="submit">Home</button>
+                <a href="./newItem" class="button">New Item</a><br/>
+                <a href="./main" class="button">Menu</a><br/>
             </form>
         </div>
     </body>

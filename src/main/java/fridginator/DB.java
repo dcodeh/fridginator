@@ -4,6 +4,7 @@ package fridginator;
 import model.MiscListItem;
 import model.SharedItem;
 import model.SharedListItem;
+import model.UnsharedItem;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -490,7 +491,9 @@ public class DB {
                 .append(", i.num_pq, pq.qty, ")
                 .append("(select sum(actual) from sharing where item_id=i.id)")
                 .append(", i.unit from sharing s")
-                .append("where user_id = ")
+                    .append(" join item i on i.id=s.item_id")
+                    .append(" join purchasable_quantity pq on i.full_pq_id=pq.id")
+                .append(" where s.user_id =")
                 .append(userID)
                 .append(";");
 
@@ -505,6 +508,36 @@ public class DB {
                 String unit = set.getString(7);
                 
                 items.add(new SharedItem(name, id, qty, numPQ, fullPQQty, weeklyUsage, unit));
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return items;
+    }
+
+    public ArrayList<UnsharedItem> getUnsharedItems(int userID) {
+        ArrayList<UnsharedItem> items = new ArrayList<>();
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+
+
+            builder
+                .append("select i.name, i.id from item i where i.id not in")
+                .append("(select item_id from sharing where user_id <> ")
+                .append(userID)
+                .append(")")
+                .append(";");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                String name = set.getString(1);
+                int id = set.getInt(2);
+
+                items.add(new UnsharedItem(id, name));
             }
 
         } catch (SQLException sqle) {

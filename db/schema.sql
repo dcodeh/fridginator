@@ -27,17 +27,17 @@ create table item(
     name        varchar(24),
     weekly      boolean, -- might need to change to integer
     unit        varchar(10),
-    num_pq      integer,
+    num_pq      integer default 0,
 
     -- foreign keys
-    full_pq_id  integer,
+    full_pq_id  integer default null,
 
     foreign key (full_pq_id) references purchasable_quantity(id)
 );
 
 create table purchasable_quantity(
     id          integer primary key,
-    active      boolean,
+    active      boolean default true,
     price       real,
     qty         real,
 
