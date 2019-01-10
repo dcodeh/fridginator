@@ -16,6 +16,7 @@
     
         <#if message??>
             <div class="${messageType}">${message}</div>
+            <br/>
         </#if>
     
         <div class="page">
@@ -25,6 +26,7 @@
             <form action="./removePQ" method="POST">
                 <#if PQList??>
                     <h3>Purchasable Quantities</h3>
+                    <br/>
                     <table>
                         <#list PQList as pq>
                             <tr>
@@ -37,20 +39,29 @@
                         </#list>
                     </table>
                 <#else>
-                    <h3>PurchasableQuantities (none)</h3>
+                    <h3>Purchasable Quantities (none)</h3>
                 </#if>
             </form>
-
+            <br/>
             <form action="./createPQ" method="POST">
-                <br/>
-                <input name="qty" placeholder="Quantity" type="number"/>
-                <p>${unit}</p>
-                <br/>
-                <p>$</p>
-                <input name="price" placeholder="Price" type="number"/>
-                <br/>
-                <button type="submit">Add</button>
-                <button type="submit">Done</button>
+                <table>
+                    <tr>
+                        <td class="min"></td>
+                        <td><input name="qty" placeholder="Quantity" type="number"/></td>
+                        <td class="min">${unit}</td>
+                    </tr>
+                    <tr>
+                        <td class="min">$</td>
+                        <td><input name="price" placeholder="Price" type="number"/></td>
+                        <td class="min"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><button name="add" type="submit">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><button iname="done" type="submit">Done</button></td>
+                    </tr>
+                </table>
             </form>
         </div>
     </body>

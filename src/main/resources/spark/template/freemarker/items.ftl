@@ -99,7 +99,7 @@
                 <#else>
                     <h2>Not Shared (none)</h2>
                 </#if>
-                <a href="./newItem" class="button">New Item</a><br/>
+                <a href="./newItem1" class="button">New Item</a><br/>
                 <a href="./main" class="button">Menu</a><br/>
             </form>
         </div>

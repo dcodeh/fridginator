@@ -35,6 +35,8 @@ public class WebServer {
     public static final String ITEMS = "/items";
     public static final String SHARE_ITEM = "/shareItem";
     public static final String UNSHARE_ITEM = "/unshareItem";
+    public static final String NEW_ITEM_1 = "/newItem1";
+    public static final String NEW_ITEM_2 = "/newItem2";
 
     // TemplateEngine for rendering pages
     private final TemplateEngine templateEngine;
@@ -66,6 +68,8 @@ public class WebServer {
         get(ITEMS, new GetItemsRoute(db, templateEngine));
         get(SHARE_ITEM, new GetShareItemRoute(db, templateEngine));
         get(UNSHARE_ITEM, new GetUnshareItemRoute(db, templateEngine));
+        get(NEW_ITEM_1, new GetNewItem1Route(db, templateEngine));
+        get(NEW_ITEM_2, new GetNewItem2Route(db, templateEngine));
 
         post(POST_SIGN_IN, new PostSignInRoute(db, templateEngine));
         post(POST_SIGN_UP, new PostSignUpRoute(db, templateEngine));

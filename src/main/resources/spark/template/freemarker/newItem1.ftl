@@ -15,26 +15,27 @@
     
         <#if message??>
             <div class="${messageType}">${message}</div>
+            <br/>
         </#if>
     
         <div class="page">
             <h1>New Item</h1>
 
-            <form action="./newItem1" method="POST">
+            <form action="./newItem2" method="GET">
                 Enter Information about the item.
                 <br/>
                 <input name="name" placeholder="Item Name" type="text"/>
                 <br/>
                 <input name="unit" placeholder="Unit" type="text"/>
                 <br/>
-                <label class="container">
+                <label class="container"><small>Restock Item Weekly</small>
                     <input type="checkbox" name="weekly" checked="false">
                     <span class="checkmark"></span>
                 </label>
                 <br/>
-                <button type="submit">Next</button>
+                <button type="submit" name="next">Next</button>
                 <br/>
-                <button type="submit">Abort</button>
+                <button type="submit" name="abort">Abort</button>
             </form>
         </div>
     </body>

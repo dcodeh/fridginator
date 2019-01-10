@@ -697,4 +697,90 @@ public class DB {
 
         return success;
     }
+
+    /**
+     * Add a record to the audit table.
+     * TODO dcodeh make the other methods that manually do this use this method
+     *
+     * @param userID the user ID the message pertains to
+     * @param message The message to store
+     */
+    public void audit(int userID, String message) {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder auditBuilder = new StringBuilder();
+            auditBuilder
+                    .append("insert into audit (date, message, user_id) values")
+                    .append("(")
+                    .append("'" + timestampFormat.format(new Date()) + "'")
+                    .append(",'")
+                    .append(message)
+                    .append("',")
+                    .append(userID)
+                    .append(");");
+
+            s.executeUpdate(auditBuilder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+    }
+
+    /**
+     * Insert a new item in the item table
+     *
+     * A new item will only be inserted if another one with the same name doesn't already
+     * exist. Once created, the new item's id will be returned.
+     * @param itemName The name of the new item
+     * @param itemUnit The unit for the new item
+     * @param weekly True to refill the item weekly
+     * @return The new item's ID, or null if something goes wrong.
+     */
+    public Integer createItem(String itemName, String itemUnit, boolean weekly) {
+        Integer newID = null;
+        boolean newItem = true;
+        try {
+            Statement s = conn.createStatement();
+
+            // make sure that item doesn't already exist!
+            StringBuilder builder = new StringBuilder();
+            builder
+                    .append("select id from item where name = '")
+                    .append(itemName)
+                    .append("';");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                System.out.println("Item already exists, skipping");
+                newItem = false;
+            }
+
+            if(!newItem) {
+                return null;
+            }
+
+            // insert the new item, since it doesn't exist already
+            StringBuilder insertBuilder = new StringBuilder();
+            insertBuilder
+                .append("insert into item (name, weekly, unit) values ")
+                .append("('")
+                .append(itemName)
+                .append("','")
+                .append(itemUnit)
+                .append("',")
+                .append(weekly)
+                .append(");");
+
+            s.executeUpdate(insertBuilder.toString());
+
+            // get the id of the freshly inserted item
+            ResultSet newItemSet = s.executeQuery(builder.toString());
+            while(newItemSet.next()) {
+                newID = newItemSet.getInt(1);
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+            return null;
+        }
+        return newID;
+    }
 }
