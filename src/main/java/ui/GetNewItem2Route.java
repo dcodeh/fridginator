@@ -5,8 +5,11 @@ import fridginator.DB;
 import fridginator.SessionMessageHelper;
 import fridginator.SessionMessageHelper.MessageType;
 import fridginator.WebServer;
+import model.ItemResultObject;
+import model.PurchasableQuantity;
 import spark.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,9 +31,14 @@ public class GetNewItem2Route implements Route {
     public static final String UNIT_ATTR = "unit";
     public static final String WEEKLY_ATTR = "weekly";
 
+    // from elsewhere
+    public static final String ITEM_ID_ATTR = "itemID";
+
     // ftl template goodies
     public static final String FTL_ITEM_NAME = "itemName";
     public static final String FTL_UNIT = "unit";
+    public static final String FTL_PQ_LIST = "PQList";
+    public static final String FTL_ITEM_ID = "itemID";
 
     // page constants
     private static final String TITLE = "New Item";
@@ -52,6 +60,7 @@ public class GetNewItem2Route implements Route {
         vm.put(TITLE_ATTR, TITLE);
 
         if(session.attribute(WebServer.SESSION_USER) != null) {
+
             // this person is already signed in
             if(request.queryParams(NEXT_ACTION) != null) {
                 String itemName = request.queryParams(NAME_ATTR);
@@ -71,9 +80,34 @@ public class GetNewItem2Route implements Route {
                     response.redirect(WebServer.ITEMS);
                 }
             } else if(request.queryParams(ABORT_ACTION) != null) {
+                // someone hit abort from the previous page
                 SessionMessageHelper.addSessionMessage(session, "Item Creation Aborted.", MessageType.info);
                 response.redirect(WebServer.ITEMS);
+            } else {
+                // user is coming from add or remove pq, or edit
+
+                // get information from item ID;
+                int itemID = Integer.valueOf(request.queryParams(ITEM_ID_ATTR));
+                ItemResultObject item = db.getItemInfoByID(itemID);
+
+                if(item == null) {
+                    halt(402, "Bad itemID");
+                }
+
+                vm.put(FTL_ITEM_NAME, item.getName());
+                vm.put(FTL_UNIT, item.getUnit());
+                vm.put(FTL_ITEM_ID, itemID);
+
+                // get PQs for item id;
+                ArrayList<PurchasableQuantity> pqList = db.getPurchasableQuantitiesForItem(itemID);
+                if(!pqList.isEmpty()) {
+                    vm.put(FTL_PQ_LIST, pqList);
+                }
+
+                SessionMessageHelper.displaySessionMessages(session, vm);
+                return templateEngine.render(new ModelAndView(vm, VIEW_NAME));
             }
+
         } else {
             SessionMessageHelper.addSessionMessage(session, "You are not logged in.", MessageType.error);
             response.redirect(WebServer.HOME_URL);

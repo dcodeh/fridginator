@@ -138,11 +138,11 @@ table {
     display: inline-block;
     box-shadow: 5px 10px 5px #dfdfdf;
     border: 1px solid black;
+    margin-bottom: 25px;
 }
 
 table.items {
     text-align: left;
-    margin-bottom: 25px;
 }
 
 tr {
@@ -171,4 +171,9 @@ a.button {
     height: 50px;
     margin:.4rem;
     min-width: 200px;
+}
+
+div.form {
+    max-width: 1024px;
+    display: inline-block;
 }

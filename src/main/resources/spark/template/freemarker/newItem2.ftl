@@ -24,6 +24,9 @@
             <h2>${itemName}</h2>
 
             <form action="./removePQ" method="POST">
+                <#if itemID??>
+                    <input type="hidden" name="itemID" value="${itemID}" />
+                </#if>
                 <#if PQList??>
                     <h3>Purchasable Quantities</h3>
                     <br/>
@@ -31,8 +34,8 @@
                         <#list PQList as pq>
                             <tr>
                                 <td>${pq.getQty()}</td>
-                                <td>${pq.getUnit()}</td>
-                                <td>${pq.getPrice()}</td>
+                                <td>${unit}</td>
+                                <td>$${pq.getPrice()}</td>
                                 <td><input type="image" id="${pq.getQty()}"
                                      src="/images/delete.png"></td>
                             </tr>
@@ -44,6 +47,10 @@
             </form>
             <br/>
             <form action="./createPQ" method="POST">
+                <h3>New Purchasable Quantity</h3>
+                <#if itemID??>
+                    <input type="hidden" name="itemID" value="${itemID}" />
+                </#if>
                 <table>
                     <tr>
                         <td class="min"></td>
@@ -59,7 +66,7 @@
                         <td colspan="3"><button name="add" type="submit">Add</button></td>
                     </tr>
                     <tr>
-                        <td colspan="3"><button iname="done" type="submit">Done</button></td>
+                        <td colspan="3"><button name="done" type="submit">Done</button></td>
                     </tr>
                 </table>
             </form>

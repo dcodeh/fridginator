@@ -34,7 +34,12 @@ public class PostShareItemRoute implements Route {
         String itemID = request.queryParams(ITEM_ID_PARAM);
         String usageFloat = request.queryParams(USAGE_FIELD);
 
-        float usage = Float.valueOf(usageFloat);
+        float usage = 0;
+        try {
+            usage = Float.valueOf(usageFloat);
+        } catch (NumberFormatException nfe) {
+            // yummy
+        }
 
         if(request.queryParams(SAVE_ACTION) != null) {
             // poke the DB

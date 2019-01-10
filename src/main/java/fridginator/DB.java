@@ -1,10 +1,7 @@
 // Copyright (c) 2018 David Cody Burrows...See LICENSE file for details
 package fridginator;
 
-import model.MiscListItem;
-import model.SharedItem;
-import model.SharedListItem;
-import model.UnsharedItem;
+import model.*;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -782,5 +779,64 @@ public class DB {
             return null;
         }
         return newID;
+    }
+
+    /**
+     * Returns an object full of some basic item info.
+     *
+     * @param itemID The item to query
+     * @return An object full of juicy information, or a cold hard null if the item ID is null
+     */
+    public ItemResultObject getItemInfoByID(int itemID) {
+        ItemResultObject result = null;
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                    .append("select name, unit from item where id = ")
+                    .append(itemID)
+                    .append(";");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                result = new ItemResultObject(itemID,
+                                              set.getString(1),
+                                              set.getString(2));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return result;
+    }
+
+    /**
+     * get all of an item's purchasable quantities as objects
+     * @param itemID The item to fetch purchasable quantities for.
+     * @return An ArrayList full of purchasable quantities (potentially empty)
+     */
+    public ArrayList<PurchasableQuantity> getPurchasableQuantitiesForItem(int itemID) {
+        ArrayList<PurchasableQuantity> pqList = new ArrayList<>();
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                    .append("select id, qty, price from purchasable_quantity where item_id=")
+                    .append(itemID)
+                    .append(" and active='true';");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                pqList.add(new PurchasableQuantity(set.getInt(1),
+                                                   set.getFloat(2),
+                                                   set.getFloat(3)));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return pqList;
     }
 }

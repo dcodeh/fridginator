@@ -19,7 +19,7 @@
         <div class="page">
             <h1>Items</h1>
 
-            <form> <!-- just here for formatting consistency -->
+            <div class ="form"> <!-- just here for formatting consistency -->
                 <#if sharedItems??>
                     <h2>Shared</h2>
                     <#list sharedItems as item>
@@ -29,7 +29,7 @@
                                 <td colspan="2"><b>${item.getName()}</b>
                                     </br>${item.getWeeklyUsageString()}</td>
                                 <td class="min">
-                                    <form action="./editItem" method="GET">
+                                    <form action="./newItem2" method="GET">
                                         <input type="hidden" name="itemID" value="${item.getID()}" />
                                         <input type="image" src="/images/gear.png">
                                     </form>
@@ -82,7 +82,7 @@
                             <tr>
                                 <td>${item.getName()}</td>
                                 <td class="min">
-                                    <form action="./editItem" method="GET">
+                                    <form action="./newItem2" method="GET">
                                         <input type="hidden" name="itemID" value="${item.getID()}" />
                                         <input type="image" src="/images/gear.png">
                                     </form>
@@ -101,7 +101,7 @@
                 </#if>
                 <a href="./newItem1" class="button">New Item</a><br/>
                 <a href="./main" class="button">Menu</a><br/>
-            </form>
+            </div>
         </div>
     </body>
 </html>
