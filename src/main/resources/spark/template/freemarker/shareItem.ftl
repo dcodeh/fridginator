@@ -24,7 +24,7 @@
                 Enter your expected weekly usage of this item. This is only
                 an estimate.
                 <br/>
-                <input name="usage" placeholder="Exp. Usage" type="number"/>
+                <input name="usage" placeholder="Exp. Usage" type="number" step="0.01"/>
                 ${unit} per week
                 <br/>
                 <button type="submit" name="save">Save</button>

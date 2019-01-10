@@ -55,12 +55,12 @@
                 <table>
                     <tr>
                         <td class="min"></td>
-                        <td><input name="qty" placeholder="Quantity" type="number"/></td>
+                        <td><input name="qty" placeholder="Quantity" type="number" step="0.01"/></td>
                         <td class="min">${unit}</td>
                     </tr>
                     <tr>
                         <td class="min">$</td>
-                        <td><input name="price" placeholder="Price" type="number"/></td>
+                        <td><input name="price" placeholder="Price" type="number" step="0.01"/></td>
                         <td class="min"></td>
                     </tr>
                     <tr>
