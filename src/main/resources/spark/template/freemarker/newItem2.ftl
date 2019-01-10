@@ -23,7 +23,7 @@
             <h1>New Item</h1>
             <h2>${itemName}</h2>
 
-            <form action="./removePQ" method="POST">
+            <form action="./removePQ" method="GET">
                 <#if itemID??>
                     <input type="hidden" name="itemID" value="${itemID}" />
                 </#if>
@@ -32,11 +32,12 @@
                     <br/>
                     <table>
                         <#list PQList as pq>
+                            <input type="hidden" name="pqID" value="${pq.getID()}" />
                             <tr>
                                 <td>${pq.getQty()}</td>
                                 <td>${unit}</td>
                                 <td>$${pq.getPrice()}</td>
-                                <td><input type="image" id="${pq.getQty()}"
+                                <td><input type="image" name="rem_${pq.getID()}"
                                      src="/images/delete.png"></td>
                             </tr>
                         </#list>

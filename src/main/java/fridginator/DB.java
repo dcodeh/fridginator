@@ -839,4 +839,24 @@ public class DB {
 
         return pqList;
     }
+
+    /**
+     * Set a PQ to inactive.
+     * @param pqID the PQ to update.
+     */
+    public void deactivatePurchasableQuantity(String pqID) {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder auditBuilder = new StringBuilder();
+            auditBuilder
+                .append("update purchasable_quantity set active = 'false'")
+                .append(" where id=")
+                .append(pqID)
+                .append(";");
+
+            s.executeUpdate(auditBuilder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+    }
 }

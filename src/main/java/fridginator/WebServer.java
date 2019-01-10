@@ -37,6 +37,7 @@ public class WebServer {
     public static final String UNSHARE_ITEM = "/unshareItem";
     public static final String NEW_ITEM_1 = "/newItem1";
     public static final String NEW_ITEM_2 = "/newItem2";
+    public static final String REMOVE_PQ = "/removePQ";
 
     // TemplateEngine for rendering pages
     private final TemplateEngine templateEngine;
@@ -70,6 +71,7 @@ public class WebServer {
         get(UNSHARE_ITEM, new GetUnshareItemRoute(db, templateEngine));
         get(NEW_ITEM_1, new GetNewItem1Route(db, templateEngine));
         get(NEW_ITEM_2, new GetNewItem2Route(db, templateEngine));
+        get(REMOVE_PQ, new GetRemovePQRoute(db, templateEngine));
 
         post(POST_SIGN_IN, new PostSignInRoute(db, templateEngine));
         post(POST_SIGN_UP, new PostSignUpRoute(db, templateEngine));
