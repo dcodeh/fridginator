@@ -47,7 +47,7 @@
                 </#if>
             </form>
             <br/>
-            <form action="./createPQ" method="POST">
+            <form action="./createPQ" method="GET">
                 <h3>New Purchasable Quantity</h3>
                 <#if itemID??>
                     <input type="hidden" name="itemID" value="${itemID}" />

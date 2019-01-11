@@ -31,7 +31,7 @@ public class GetCreatePQRoute implements Route {
     public static final String FTL_ITEM_ID = "itemID";
 
     public static final String QTY_FIELD = "qty";
-    public static final String PRICE_FIELD = "qty";
+    public static final String PRICE_FIELD = "price";
     public static final String ADD_ACTION = "add";
     public static final String DONE_ACTION = "done";
 
@@ -57,36 +57,42 @@ public class GetCreatePQRoute implements Route {
             // this person is already signed in
 
             String itemID = request.queryParams(ITEM_ID);
-            String pqID = db.createPQ(itemID, price, qty);
+            Float price = null;
+            Float qty = null;
 
-            if(pqID == null) {
-                SessionMessageHelper.addSessionMessage(session, "Purchasable Quantity couldn't be created.", MessageType.error);
+            try {
+                price = Float.valueOf(request.queryParams(PRICE_FIELD));
+                qty = Float.valueOf(request.queryParams(QTY_FIELD));
+            } catch(NumberFormatException nfe) {
+                
             }
 
-            ItemResultObject item = db.getItemInfoByID(Integer.valueOf(itemID));
-
-            if(item == null) {
-                halt(402, "Bad itemID");
-            }
-
-            vm.put(FTL_ITEM_NAME, item.getName());
-            vm.put(FTL_UNIT, item.getUnit());
-            vm.put(FTL_ITEM_ID, itemID);
-
-            // get PQs for item id;
-            // TODO dcodeh make this safer...
-            ArrayList<PurchasableQuantity> pqList = db.getPurchasableQuantitiesForItem(Integer.valueOf(itemID));
-            if(!pqList.isEmpty()) {
-                vm.put(FTL_PQ_LIST, pqList);
+            if(price != null && qty != null) {
+                db.createPQ(itemID, price, qty);
             }
 
             if(request.queryParams(ADD_ACTION) != null) {
+                ItemResultObject item = db.getItemInfoByID(Integer.valueOf(itemID));
+
+                if(item == null) {
+                    halt(402, "Bad itemID");
+                }
+
+                vm.put(FTL_ITEM_NAME, item.getName());
+                vm.put(FTL_UNIT, item.getUnit());
+                vm.put(FTL_ITEM_ID, itemID);
+
+                // get PQs for item id;
+                // TODO dcodeh make this safer...
+                ArrayList<PurchasableQuantity> pqList = db.getPurchasableQuantitiesForItem(Integer.valueOf(itemID));
+                if(!pqList.isEmpty()) {
+                    vm.put(FTL_PQ_LIST, pqList);
+                }
                 SessionMessageHelper.displaySessionMessages(session, vm);
                 return templateEngine.render(new ModelAndView(vm, VIEW_NAME));
             } else if(request.queryParams(DONE_ACTION) != null) {
                 response.redirect(WebServer.ITEMS);
             }
-
 
         } else {
             SessionMessageHelper.addSessionMessage(session, "You are not logged in.", MessageType.error);

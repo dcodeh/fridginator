@@ -859,4 +859,31 @@ public class DB {
             sqle.printStackTrace();
         }
     }
+
+    /**
+     * Inserts a new Purchasable Quantity for an item
+     * @param itemID The item this PQ is for
+     * @param price The price
+     * @param qty What you get when you pay that price
+     */
+    public void createPQ(String itemID, float price, float qty) {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("insert into purchasable_quantity (price, qty, item_id) values")
+                .append("(")
+                .append(price)
+                .append(",")
+                .append(qty)
+                .append(",")
+                .append(itemID)
+                .append(");");
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+    }
 }
