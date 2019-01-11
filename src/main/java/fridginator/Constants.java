@@ -27,6 +27,8 @@ public class Constants {
     
     public static final String DB_LOCATION = "/opt/fridginator/fridginator.db";
 
-    public static final int PORT = 4567;
+    public static final int PORT = 56932;
+
+    public static final long INVENTORY_THREAD_SLEEP = 6; // hours
 
 }

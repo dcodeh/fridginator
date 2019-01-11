@@ -5,6 +5,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import spark.TemplateEngine;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -52,25 +56,17 @@ public class Launch {
         final WebServer webServer = new WebServer(db, templateEngine);
         webServer.init();
         System.out.println("DONE");
-        
-        // do things
-        try {
-            Thread.sleep(150000);
-        } catch (InterruptedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
 
-        // Be a good person and close resources even though the JVM
-        // does it for me
-        try {
-            conn.close();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        webServer.halt();
+        InventoryRunnable inventoryRunnable = new InventoryRunnable(db, Constants.INVENTORY_THREAD_SLEEP);
+        ScheduledExecutorService inventoryExecutor = Executors.newScheduledThreadPool(1 /* only 1 thread*/);
+        inventoryExecutor.scheduleAtFixedRate(inventoryRunnable,
+                                              1l /* initialDelay*/,
+                                              Constants.INVENTORY_THREAD_SLEEP,
+                                              TimeUnit.HOURS);
 
+        // I want to be a good person. I really do, but I'm not closing the resources here
+        // because the only way this application is going down is if it's killed.
+        // And the JVM does it for me anyway. What a guy.
     }
 
     /**

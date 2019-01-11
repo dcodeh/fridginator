@@ -944,4 +944,65 @@ public class DB {
             sqle.printStackTrace();
         }
     }
+
+    /**
+     * Returns an array list of all of the items that need to have their quantities reduced.
+     * @return An ArrayList (non-null) containing all of the items that need updating.
+     */
+    public ArrayList<InventoryItemResultObject> getAllItemsForInventoryUpdate() {
+        ArrayList<InventoryItemResultObject> items = new ArrayList<>();
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                    .append("select i.id, s.actual from item i join sharing s on s.item_id=i.id;");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                items.add(new InventoryItemResultObject(set.getInt(1), set.getFloat(2)));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return items;
+    }
+
+    /**
+     * Add an inventory entry representing the inventory update.
+     *
+     * @param itemID The item to update inventory for
+     * @param decrementQty The amount to decrement by
+     */
+    public void autoDecrementInventory(int itemID, float decrementQty) {
+        float finalQty = getCurrentEstimatedQty(itemID) - decrementQty;
+
+        if(finalQty < 0) {
+            finalQty = 0;
+            System.out.println("WARNING: item " + itemID + " is gonezo");
+        }
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                    .append("insert into inventory ")
+                    .append("(qty, point, restock, auto, time, item_id) values ")
+                    .append("(")
+                    .append(finalQty)
+                    .append(",")
+                    .append("false,") // point
+                    .append("false,") // restock
+                    .append("true,") // auto
+                    .append("'" + timestampFormat.format(new Date()) + "',")
+                    .append(itemID)
+                    .append(");");
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+    }
+
 }
