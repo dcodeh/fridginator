@@ -884,6 +884,64 @@ public class DB {
         } catch (SQLException sqle) {
             sqle.printStackTrace();
         }
+    }
 
+    /**
+     * Returns how much of something we currently have in stock.
+     * @param itemID The item to check
+     * @return The amount in the fridge (non-null)
+     */
+    public float getCurrentEstimatedQty(int itemID) {
+        float qty = 0;
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                    .append("select qty from inventory where item_id=")
+                    .append(itemID)
+                    .append(" order by time desc limit 1")
+                    .append(";");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                qty = set.getFloat(1);
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+
+        return qty;
+    }
+
+    /**
+     * Add a hard inventory point to the database.
+     * @param itemID The Item this inventory update is for
+     * @param qty The new qty
+     * @param userID the user making this change
+     */
+    public void updateItemQty(int itemID, Float qty, int userID) {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                    .append("insert into inventory ")
+                    .append("(qty, point, restock, auto, time, user_id, item_id) values ")
+                    .append("(")
+                    .append(qty)
+                    .append(",")
+                    .append("true,") // point
+                    .append("false,") // restock
+                    .append("false,") // auto
+                    .append("'" + timestampFormat.format(new Date()) + "',")
+                    .append(userID)
+                    .append(",")
+                    .append(itemID)
+                    .append(");");
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
     }
 }

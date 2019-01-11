@@ -61,7 +61,14 @@
                                         <#break>
                                     </#switch>
                                 </td>
-                                <td colspan="3">${item.getQuantityForText()} ${item.getUnit()} in fridge</td>
+                                <td colspan="3">
+                                    <form action="./updateInventory" method="GET">
+                                        <input type="hidden" name="itemID" value="${item.getID()}" />
+                                        <button type="submit" class="link">
+                                            ${item.getQuantityForText()} ${item.getUnit()} in fridge
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                             <#if item.hasWarning()>
                                 <tr>

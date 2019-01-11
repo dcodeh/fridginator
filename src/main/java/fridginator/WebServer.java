@@ -39,6 +39,7 @@ public class WebServer {
     public static final String NEW_ITEM_2 = "/newItem2";
     public static final String REMOVE_PQ = "/removePQ";
     public static final String CREATE_PQ ="/createPQ";
+    public static final String UPDATE_INVENTORY = "/updateInventory";
 
     // TemplateEngine for rendering pages
     private final TemplateEngine templateEngine;
@@ -74,12 +75,14 @@ public class WebServer {
         get(NEW_ITEM_2, new GetNewItem2Route(db, templateEngine));
         get(REMOVE_PQ, new GetRemovePQRoute(db, templateEngine));
         get(CREATE_PQ, new GetCreatePQRoute(db, templateEngine));
+        get(UPDATE_INVENTORY, new GetUpdateInventoryRoute(db, templateEngine));
 
         post(POST_SIGN_IN, new PostSignInRoute(db, templateEngine));
         post(POST_SIGN_UP, new PostSignUpRoute(db, templateEngine));
         post(POST_UPDATE_MISC, new PostEditMiscListRoute(db, templateEngine));
         post(POST_LIST, new PostListRoute(db, templateEngine));
         post(SHARE_ITEM, new PostShareItemRoute(db, templateEngine));
+        post(UPDATE_INVENTORY, new PostUpdateInventoryRoute(db, templateEngine));
     }
     
     /**
