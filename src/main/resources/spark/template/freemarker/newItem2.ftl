@@ -23,29 +23,30 @@
             <h1>New Item</h1>
             <h2>${itemName}</h2>
 
-            <form action="./removePQ" method="GET">
-                <#if itemID??>
-                    <input type="hidden" name="itemID" value="${itemID}" />
-                </#if>
+            <div class="form">
                 <#if PQList??>
                     <h3>Purchasable Quantities</h3>
                     <br/>
                     <table>
                         <#list PQList as pq>
-                            <input type="hidden" name="pqID" value="${pq.getID()}" />
                             <tr>
-                                <td>${pq.getQty()}</td>
-                                <td>${unit}</td>
-                                <td>$${pq.getPrice()}</td>
-                                <td><input type="image" name="rem_${pq.getID()}"
-                                     src="/images/delete.png"></td>
+                                <form action="./removePQ" method="GET">
+                                    <#if itemID??>
+                                        <input type="hidden" name="itemID" value="${itemID}" />
+                                    </#if>
+                                    <td>${pq.getQty()}</td>
+                                    <td>${unit}</td>
+                                    <td>$${pq.getPrice()}</td>
+                                    <td><input type="image" src="/images/delete.png"></td>
+                                    <input type="hidden" name="pqID" value="${pq.getID()}" />
+                                 </form>
                             </tr>
                         </#list>
                     </table>
                 <#else>
                     <h3>Purchasable Quantities (none)</h3>
                 </#if>
-            </form>
+            </div>
             <br/>
             <form action="./createPQ" method="GET">
                 <h3>New Purchasable Quantity</h3>

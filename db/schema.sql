@@ -37,7 +37,7 @@ create table item(
 
 create table purchasable_quantity(
     id          integer primary key,
-    active      boolean default true,
+    active      boolean default 'true',
     price       real,
     qty         real,
 
