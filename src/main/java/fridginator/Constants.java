@@ -31,4 +31,7 @@ public class Constants {
 
     public static final long INVENTORY_THREAD_SLEEP = 6; // hours
 
+    private static final long UBERTHREAD_SLEEP_HOURS = 24; // hours
+    public static final long UBERTHREAD_SLEEP_MILLIS = UBERTHREAD_SLEEP_HOURS * 3 * (10^6);
+
 }

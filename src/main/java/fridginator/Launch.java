@@ -4,7 +4,10 @@ package fridginator;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -63,6 +66,19 @@ public class Launch {
                                               1l /* initialDelay*/,
                                               Constants.INVENTORY_THREAD_SLEEP,
                                               TimeUnit.HOURS);
+
+        TimerTask uberThread = new UberThread(db);
+        Timer timer = new Timer();
+
+        // make it run at 11:50 PM today
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 50);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        Date initialRun = cal.getTime();
+        timer.scheduleAtFixedRate(uberThread, initialRun, Constants.UBERTHREAD_SLEEP_MILLIS);
 
         // I want to be a good person. I really do, but I'm not closing the resources here
         // because the only way this application is going down is if it's killed.

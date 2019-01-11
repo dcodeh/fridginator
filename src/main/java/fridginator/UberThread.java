@@ -1,6 +1,8 @@
 // Copyright (c) 2018 David Cody Burrows...See LICENSE file for details.
 package fridginator;
 
+import java.util.TimerTask;
+
 /**
  * THIS IS ACTUALLY A RUNNABLE OBJECT, NOT A THREAD OBJECT!
  * UberThread just sounds much cooler than UberRunnable.
@@ -11,7 +13,7 @@ package fridginator;
  *
  * @author dcodeh
  */
-public class UberThread implements Runnable {
+public class UberThread extends TimerTask {
 
     private DB db;
 
