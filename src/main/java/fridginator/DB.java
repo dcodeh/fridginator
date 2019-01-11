@@ -21,9 +21,11 @@ public class DB {
     private Connection conn;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SS"); // S is millisecond
+    private boolean uberThreadRunning;
     
     public DB(Connection conn) {
         this.conn = conn;
+        uberThreadRunning = false;
     }
 
     /**
@@ -1005,4 +1007,31 @@ public class DB {
         }
     }
 
+    /**
+     * See if the almighty uberthread is doing anything at the moment.
+     * @return True if it is, false otherwise.
+     */
+    public boolean isUberThreadRunning() {
+        return uberThreadRunning;
+    }
+
+    /**
+     * Lock out other uberthreads from trying to run for any reason
+     * @return True if the calling thread can continue. False otherwise
+     */
+    public synchronized boolean getUberThreadLock() {
+        if(uberThreadRunning) {
+            return false;
+        } else {
+            uberThreadRunning = true;
+            return true;
+        }
+    }
+
+    /**
+     * Release the uberthread, and allow one other to run (if there are any)
+     */
+    public synchronized void releaseUberThreadLock() {
+        uberThreadRunning = false;
+    }
 }
