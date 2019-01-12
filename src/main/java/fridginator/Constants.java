@@ -34,4 +34,8 @@ public class Constants {
     private static final long UBERTHREAD_SLEEP_HOURS = 24; // hours
     public static final long UBERTHREAD_SLEEP_MILLIS = UBERTHREAD_SLEEP_HOURS * 3 * (10^6);
 
+    public static final long MIN_ACTUAL_USAGE_WINDOW = 48; // hours
+    public static final long HOURS_PER_WEEK = 168;
+    public static final long HOURS_PER_9_DAYS = 9 * 24;
+
 }

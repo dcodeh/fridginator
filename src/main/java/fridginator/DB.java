@@ -19,8 +19,8 @@ import java.util.LinkedHashMap;
 public class DB {
     
     private Connection conn;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    private SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SS"); // S is millisecond
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    public static final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SS"); // S is millisecond
     private boolean uberThreadRunning;
     
     public DB(Connection conn) {
@@ -827,7 +827,7 @@ public class DB {
             builder
                     .append("select id, qty, price from purchasable_quantity where item_id=")
                     .append(itemID)
-                    .append(" and active='true';");
+                    .append(" and active='true' order by qty desc;");
 
             ResultSet set = s.executeQuery(builder.toString());
             while(set.next()) {
@@ -1058,5 +1058,221 @@ public class DB {
             sqle.printStackTrace();
         }
         
+    }
+    
+    /**
+     * Gets a whole bunch of information about the items useful for the actual usage calculation
+     * @return An ArrayList of ActualUsageItemResultObjects
+     */
+    public ArrayList<ActualUsageItemResultObject> getItemsForActualCalculation() {
+        ArrayList<ActualUsageItemResultObject> items = new ArrayList<>();
+        
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            
+            builder
+                .append("select i.id,")
+                .append("(select sum(actual) from sharing where item_id=i.id),")
+                .append("(select qty from inventory where item_id=i.id order by time desc limit 1),")
+                .append("i.weekly from item i;");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                int id = set.getInt(1);
+                float actual = set.getFloat(2);
+                float currentQty = set.getFloat(3);
+                boolean weekly = set.getBoolean(4);
+                
+                items.add(new ActualUsageItemResultObject(id, actual, currentQty, weekly));
+                
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        
+        return items;
+    }
+
+    /**
+     * Returns the info for the last hard point for a certain item.
+     * @param itemID Item to check inventory for
+     * @return An Inventory point result object
+     */
+    public InventoryPointResultObject getLastHardPoint(int itemID) {
+        InventoryPointResultObject result = null;
+        
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            
+            builder
+                .append("select time, qty from inventory where item_id=")
+                .append(itemID)
+                .append(" and point='true' order by time desc limit 1");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                String inventoryDate = set.getString(1);
+                float qty = set.getFloat(2);
+                
+                result = new InventoryPointResultObject(inventoryDate, qty);
+                
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        
+        return result;
+        
+    }
+
+    /**
+     * Returns information about the last restock for a certain item
+     * @param itemID The item to check
+     * @return An inventory point (or null)
+     */
+    public InventoryPointResultObject getLastRestock(int itemID) {
+        InventoryPointResultObject result = null;
+        
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            
+            builder
+                .append("select time, qty from inventory where item_id=")
+                .append(itemID)
+                .append(" and restock='true' order by time desc limit 1");
+
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                String inventoryDate = set.getString(1);
+                float qty = set.getFloat(2);
+                
+                result = new InventoryPointResultObject(inventoryDate, qty);
+                
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        
+        return result;
+        
+    }
+
+    /**
+     * Set the actual usage of an item in the DB by scaling back 
+     * the actual usage of each user that shares it.
+     * @param itemID The item to update usage for
+     * @param scaleFactor The amount to scale each user's usage by
+     */
+    public void updateActualUsage(int itemID, float scaleFactor) {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("update sharing set actual = actual * ") 
+                .append(scaleFactor)
+                .append("where item_id = ")
+                .append(itemID);
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+    }
+
+    /**
+     * Gets the smallest PQ for an item
+     * @param itemID the item to get PQs for 
+     * @return a PurchasableQuantity object
+     */
+    public PurchasableQuantity getSmallestPQ(int itemID) {
+        PurchasableQuantity pq = null;
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("select id, qty, price from purchasable_quantity where ")
+                .append("item_id =")
+                .append(itemID)
+                .append(" and active='true' ")
+                .append("order by qty limit 1");
+            
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                pq = new PurchasableQuantity(set.getInt(1),
+                                             set.getFloat(2),
+                                             set.getFloat(3));
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        
+        return pq;
+    }
+
+    /**
+     * Sets an item's full PQ
+     * @param itemID The item to update
+     * @param newPQ The information about the new PQ
+     * @param newMultiplicity The new multiplicity to use
+     */
+    public void setFullPQ(int itemID, PurchasableQuantity newPQ, int newMultiplicity) {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("update item set full_pq_id =")
+                .append(newPQ.getID())
+                .append(" where id=")
+                .append(itemID)
+                .append(";");
+            
+            builder
+                .append("update item set num_pq =")
+                .append(newMultiplicity)
+                .append(" where id=")
+                .append(itemID)
+                .append(";");
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+    }
+    
+    /**
+     * Gets the largest PQ for an item
+     * @param itemID the item to get PQs for 
+     * @return a PurchasableQuantity object
+     */
+    public PurchasableQuantity getLargestPQ(int itemID) {
+        PurchasableQuantity pq = null;
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("select id, qty, price from purchasable_quantity where ")
+                .append("item_id =")
+                .append(itemID)
+                .append(" and active='true' ")
+                .append("order by qty desc limit 1");
+            
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                pq = new PurchasableQuantity(set.getInt(1),
+                                             set.getFloat(2),
+                                             set.getFloat(3));
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        
+        return pq;
     }
 }
