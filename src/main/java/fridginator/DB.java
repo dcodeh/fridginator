@@ -1275,4 +1275,21 @@ public class DB {
         
         return pq;
     }
+    
+    /**
+     * Clears everyone's shared list
+     */
+    public void clearSharedLists() {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("delete from shared_list")
+                .append(";");
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+    }
 }

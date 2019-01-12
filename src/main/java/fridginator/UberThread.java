@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +43,8 @@ public class UberThread extends TimerTask {
                 db.auditBums();
             }
 
+            restockCheckedItems();
+            
             calculateActualUsage();
 
             generateLists();
@@ -166,7 +169,21 @@ public class UberThread extends TimerTask {
 
     private void generateLists() {
         // clear everyone's shared list
+        db.clearSharedLists();
 
+        ArrayList<ActualUsageItemResultObject> items = db.getItemsForActualCalculation();
+        HashMap<ActualUsageItemResultObject, Float> neededItems = new HashMap<>();
+        for(ActualUsageItemResultObject item : items) {
+            if(item.getCurrentQty() <= 0) {
+                neededItems.put(item, item.getCurrentQty());
+            } else {
+                if(item.isWeekly()) {
+                    // TODO dcodeh if not friday, adjust qtyNeeded for friday
+                } else {
+                    
+                }
+            }
+        }
         // for each item
             // Add it to the list if it's empty
             // Otherwise, calculate the actual quantity at the end of the week (9 days)
@@ -182,6 +199,10 @@ public class UberThread extends TimerTask {
                     // for each item
                         // assign a single unit of the largest PQ without going over by more than 1 of the smallest PQ
                         // to the user with the lowest contribution of those being considered
+    }
+    
+    private void restockCheckedItems() {
+        // TODO dcodeh
     }
 
 }
