@@ -1034,4 +1034,29 @@ public class DB {
     public synchronized void releaseUberThreadLock() {
         uberThreadRunning = false;
     }
+
+    /**
+     * Add an audit entry for every naughty user that didn't buy things they
+     * were supposed to.
+     */
+    public void auditBums() {
+
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("select user_id, i.name from shared_list ")
+                .append("join item i on item_id=i.id")
+                .append(" where checked='false' group by user_id");
+            
+            ResultSet naughtyList = s.executeQuery(builder.toString());
+            while(naughtyList.next()) {
+                int userID = Integer.valueOf(naughtyList.getString(1));
+                audit(userID, "Didn't buy " + naughtyList.getString(2));
+            }
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        
+    }
 }

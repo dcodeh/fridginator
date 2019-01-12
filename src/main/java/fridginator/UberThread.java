@@ -1,6 +1,7 @@
 // Copyright (c) 2018 David Cody Burrows...See LICENSE file for details.
 package fridginator;
 
+import java.util.Calendar;
 import java.util.TimerTask;
 
 /**
@@ -26,13 +27,13 @@ public class UberThread extends TimerTask {
         if(db.getUberThreadLock()) {
             print("uberthread running...");
 
-            // first, determine if it's friday
+            Calendar carl = Calendar.getInstance(); // I didn't mean to type that r, but I am glad that I did
+            
             // if it's friday, check to see if other users have things on their shared lists
-                // add information to the audit table
-                // complain in GroupMe
+            if(carl.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
+                db.auditBums();
+            }
 
-            // if it's not friday, pretend like it's friday at midnight
-            // determine number of hours in the future that is
             calculateActualUsage();
 
             generateLists();
@@ -47,6 +48,10 @@ public class UberThread extends TimerTask {
         System.out.println("[UBER] " + s);
     }
 
+    /**
+     * Calculate and update the actual amounts of items that are 
+     * being used, and decide how much of each item should be kept around.
+     */
     private void calculateActualUsage() {
         // for each item in the db
             // calculate actual usage
