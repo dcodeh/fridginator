@@ -1292,4 +1292,52 @@ public class DB {
             sqle.printStackTrace();
         }
     }
+
+    /**
+     * Updates inventory according to who 
+     * bought what
+     */
+    public void restockCheckedItems() {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("select user_id, num, pq.qty, pq.item_id,")
+                .append("(select qty from inventory where item_id=pq.item_id order by time desc limit 1)")
+                .append(" from shared_list ")
+                .append("join purchasable_quantity pq on pq_id=pq.id ")
+                .append("where checked='true'");
+            
+            ResultSet set = s.executeQuery(builder.toString());
+            while(set.next()) {
+                int userID = set.getInt(1);
+                int num = set.getInt(2);
+                float qty = set.getFloat(3);
+                int itemID = set.getInt(4);
+                float oldQty = set.getFloat(5);
+                float delta = num * qty;
+                
+                StringBuilder invBuilder = new StringBuilder();
+                invBuilder
+                        .append("insert into inventory ")
+                        .append("(qty, point, restock, auto, time, user_id, item_id) values ")
+                        .append("(")
+                        .append(oldQty + delta)
+                        .append(",")
+                        .append("false,") // point
+                        .append("true,") // restock
+                        .append("false,") // auto
+                        .append("'" + timestampFormat.format(new Date()) + "',")
+                        .append(userID)
+                        .append(",")
+                        .append(itemID)
+                        .append(");");
+                s.executeUpdate(invBuilder.toString());
+            }
+
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
+        
+    }
 }

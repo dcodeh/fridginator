@@ -47,7 +47,10 @@ public class UberThread extends TimerTask {
             
             calculateActualUsage();
 
-            generateLists();
+            // For release 1.0 I'll do this manually
+            // to supervise all of the other parts of this application
+            // before it starts asking people to spend money
+            // generateLists();
 
         } else {
             print("Another uberthread is already running. Exiting.");
@@ -202,7 +205,7 @@ public class UberThread extends TimerTask {
     }
     
     private void restockCheckedItems() {
-        // TODO dcodeh
+        db.restockCheckedItems();
     }
 
 }
