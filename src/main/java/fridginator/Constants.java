@@ -32,7 +32,7 @@ public class Constants {
     public static final long INVENTORY_THREAD_SLEEP = 6; // hours
 
     private static final long UBERTHREAD_SLEEP_HOURS = 24; // hours
-    public static final long UBERTHREAD_SLEEP_MILLIS = UBERTHREAD_SLEEP_HOURS * 3 * (10^6);
+    public static final long UBERTHREAD_SLEEP_MILLIS = UBERTHREAD_SLEEP_HOURS * 3600000; 
 
     public static final long MIN_ACTUAL_USAGE_WINDOW = 48; // hours
     public static final long HOURS_PER_WEEK = 168;

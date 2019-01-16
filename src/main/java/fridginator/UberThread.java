@@ -51,6 +51,7 @@ public class UberThread extends TimerTask {
             // to supervise all of the other parts of this application
             // before it starts asking people to spend money
             // generateLists();
+            db.releaseUberThreadLock();
 
         } else {
             print("Another uberthread is already running. Exiting.");
