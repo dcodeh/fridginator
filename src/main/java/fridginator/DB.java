@@ -1083,8 +1083,8 @@ public class DB {
                 int id = set.getInt(1);
                 float actual = set.getFloat(2);
                 float currentQty = set.getFloat(3);
-                boolean weekly = set.getBoolean(4);
-                String time = set.getString(5);
+                String time = set.getString(4);
+                boolean weekly = set.getBoolean(5);
                 
                 items.add(new ActualUsageItemResultObject(id, actual, currentQty, weekly, time));
                 
