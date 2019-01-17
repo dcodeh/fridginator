@@ -20,7 +20,7 @@ public class DB {
     
     private Connection conn;
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    public static final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SS"); // S is millisecond
+    public static final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS"); // S is millisecond
     private boolean uberThreadRunning;
     
     public DB(Connection conn) {
@@ -1075,6 +1075,7 @@ public class DB {
                 .append("select i.id,")
                 .append("(select sum(actual) from sharing where item_id=i.id),")
                 .append("(select qty from inventory where item_id=i.id order by time desc limit 1),")
+                .append("(select time from inventory where item_id=i.id order by time desc limit 1),")
                 .append("i.weekly from item i;");
 
             ResultSet set = s.executeQuery(builder.toString());
@@ -1083,8 +1084,9 @@ public class DB {
                 float actual = set.getFloat(2);
                 float currentQty = set.getFloat(3);
                 boolean weekly = set.getBoolean(4);
+                String time = set.getString(5);
                 
-                items.add(new ActualUsageItemResultObject(id, actual, currentQty, weekly));
+                items.add(new ActualUsageItemResultObject(id, actual, currentQty, weekly, time));
                 
             }
         } catch (SQLException sqle) {
@@ -1173,7 +1175,7 @@ public class DB {
             builder
                 .append("update sharing set actual = actual * ") 
                 .append(scaleFactor)
-                .append("where item_id = ")
+                .append(" where item_id = ")
                 .append(itemID);
 
             s.executeUpdate(builder.toString());
@@ -1339,5 +1341,27 @@ public class DB {
             sqle.printStackTrace();
         }
         
+    }
+
+    /**
+     * Set the actual usage of an item in the DB by scaling back 
+     * the actual usage of each user that shares it.
+     * @param itemID The item to update usage for
+     * @param actual The new actual usage to set for the user
+     */
+    public void setActualUsage (int itemID, float actual) {
+        try {
+            Statement s = conn.createStatement();
+            StringBuilder builder = new StringBuilder();
+            builder
+                .append("update sharing set actual = ") 
+                .append(actual)
+                .append(" where item_id = ")
+                .append(itemID);
+
+            s.executeUpdate(builder.toString());
+        } catch (SQLException sqle) {
+            sqle.printStackTrace();
+        }
     }
 }

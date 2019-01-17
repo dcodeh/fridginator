@@ -79,14 +79,14 @@ public class UberThread extends TimerTask {
             
             if(pointA != null) {
                 Date pointADate = null;
-                Date now = new Date();
+                Date now = item.getInventoryDate();
                 try {
                     pointADate = DB.timestampFormat.parse(pointA.getInventoryDate());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
                 
-                long diffMillis = pointADate.getTime() - now.getTime();
+                long diffMillis = now.getTime() - pointADate.getTime();
                 long diffHours = TimeUnit.HOURS.convert(diffMillis, TimeUnit.MILLISECONDS);
                 
                 float actualUsage = item.getActual();
@@ -98,7 +98,11 @@ public class UberThread extends TimerTask {
                     float newActual = usagePerHour * Constants.HOURS_PER_WEEK;
                     
                     actualUsage = (oldActual + newActual) / 2;
-                    db.updateActualUsage(item.getId(), actualUsage / oldActual);
+                    if(oldActual != 0) {
+                        db.updateActualUsage(item.getId(), actualUsage / oldActual);
+                    } else {
+                        db.setActualUsage(item.getId(), actualUsage);
+                    }
                 } else {
                     print("Couldn't calculate actual usage for item " + item.getId() + ": time window too short");
                 }
@@ -163,7 +167,7 @@ public class UberThread extends TimerTask {
 
     private int findMult(PurchasableQuantity pq, float qtyNeeded) {
         float totalQty = 0;
-        int mult = 1;
+        int mult = 0;
         while(totalQty < qtyNeeded) {
             mult++;
             totalQty = mult * pq.getQty();

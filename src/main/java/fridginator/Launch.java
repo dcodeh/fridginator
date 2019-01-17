@@ -53,32 +53,35 @@ public class Launch {
 
         DB db = new DB(conn);
         
-        // Start the Webserver
-        System.out.println("Starting WebServer...");
-        final TemplateEngine templateEngine = new FreeMarkerEngine();
-        final WebServer webServer = new WebServer(db, templateEngine);
-        webServer.init();
-        System.out.println("DONE");
+//        // Start the Webserver
+//        System.out.println("Starting WebServer...");
+//        final TemplateEngine templateEngine = new FreeMarkerEngine();
+//        final WebServer webServer = new WebServer(db, templateEngine);
+//        webServer.init();
+//        System.out.println("DONE");
+//
+//        InventoryRunnable inventoryRunnable = new InventoryRunnable(db, Constants.INVENTORY_THREAD_SLEEP);
+//        ScheduledExecutorService inventoryExecutor = Executors.newScheduledThreadPool(1 /* only 1 thread*/);
+//        inventoryExecutor.scheduleAtFixedRate(inventoryRunnable,
+//                                              1l /* initialDelay*/,
+//                                              Constants.INVENTORY_THREAD_SLEEP,
+//                                              TimeUnit.HOURS);
 
-        InventoryRunnable inventoryRunnable = new InventoryRunnable(db, Constants.INVENTORY_THREAD_SLEEP);
-        ScheduledExecutorService inventoryExecutor = Executors.newScheduledThreadPool(1 /* only 1 thread*/);
-        inventoryExecutor.scheduleAtFixedRate(inventoryRunnable,
-                                              1l /* initialDelay*/,
-                                              Constants.INVENTORY_THREAD_SLEEP,
-                                              TimeUnit.HOURS);
-
-        TimerTask uberThread = new UberThread(db);
-        Timer timer = new Timer();
-
-        // make it run at 11:50 PM today
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 50);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-
-        Date initialRun = cal.getTime();
-        timer.scheduleAtFixedRate(uberThread, initialRun, Constants.UBERTHREAD_SLEEP_MILLIS);
+//        TimerTask uberThread = new UberThread(db);
+//        Timer timer = new Timer();
+//
+//        // make it run at 11:50 PM today
+//        Calendar cal = Calendar.getInstance();
+//        cal.set(Calendar.HOUR_OF_DAY, 23);
+//        cal.set(Calendar.MINUTE, 50);
+//        cal.set(Calendar.SECOND, 0);
+//        cal.set(Calendar.MILLISECOND, 0);
+//
+//        Date initialRun = cal.getTime();
+//        timer.scheduleAtFixedRate(uberThread, initialRun, Constants.UBERTHREAD_SLEEP_MILLIS);
+        UberThread uber = new UberThread(db);
+        Thread t = new Thread(uber);
+        t.start();
 
         // I want to be a good person. I really do, but I'm not closing the resources here
         // because the only way this application is going down is if it's killed.
