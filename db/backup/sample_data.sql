@@ -70,7 +70,7 @@ insert into inventory (point, item_id, time) values
 
 -- Bagels
 insert into item (name, weekly, unit) values
-    ("Bagels", 0, "ct");
+    ("Bagels", 'true', "ct");
 insert into purchasable_quantity (price, qty, item_id) values
     (5.49, 6, 8);
 insert into inventory (point, item_id, time) values
@@ -78,7 +78,7 @@ insert into inventory (point, item_id, time) values
 
 -- Bread
 insert into item (name, weekly, unit) values
-    ("Bread", 0, "loaf");
+    ("Bread", 'true', "loaf");
 insert into purchasable_quantity (price, qty, item_id) values
     (2.99, 2, 9),
     (1.99, 1, 9);
@@ -95,7 +95,7 @@ insert into inventory (point, item_id, time) values
 
 -- Milk
 insert into item (name, weekly, unit) values
-    ("1% Milk", 0, "gal");
+    ("1% Milk", 'true', "gal");
 insert into purchasable_quantity (price, qty, item_id) values
     (1.79, 1, 11),
     (1.59, 0.5, 11);
@@ -104,7 +104,7 @@ insert into inventory (point, item_id, time) values
 
 -- Eggs
 insert into item (name, weekly, unit) values
-    ("Eggs", 0, "ct");
+    ("Eggs", 'true', "ct");
 insert into purchasable_quantity (price, qty, item_id) values
     (0.90, 6, 12),
     (1.59, 12, 12),
@@ -206,7 +206,7 @@ insert into inventory (point, item_id, time) values
 
 -- Bananas
 insert into item (name, weekly, unit) values
-    ("Bananas", 0, "ct");
+    ("Bananas", 'true', "ct");
 insert into purchasable_quantity (price, qty, item_id) values
     (1.49, 8, 23);
 insert into inventory (point, item_id, time) values
