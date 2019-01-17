@@ -932,7 +932,7 @@ public class DB {
                     .append("(")
                     .append(qty)
                     .append(",")
-                    .append("true,") // point
+                    .append("'true',") // point
                     .append("false,") // restock
                     .append("false,") // auto
                     .append("'" + timestampFormat.format(new Date()) + "',")
