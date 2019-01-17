@@ -1084,7 +1084,7 @@ public class DB {
                 float actual = set.getFloat(2);
                 float currentQty = set.getFloat(3);
                 String time = set.getString(4);
-                boolean weekly = set.getBoolean(5);
+                boolean weekly = Boolean.valueOf(set.getString(5));
                 
                 items.add(new ActualUsageItemResultObject(id, actual, currentQty, weekly, time));
                 

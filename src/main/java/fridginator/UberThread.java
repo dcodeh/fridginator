@@ -113,23 +113,32 @@ public class UberThread extends TimerTask {
                     
                     if(qtyNeeded > 0) {
                         ArrayList<PurchasableQuantity> pqs = db.getPurchasableQuantitiesForItem(item.getId());
-                        
-                        PurchasableQuantity smallestPQ = db.getSmallestPQ(item.getId());
-                        float smallestQty = smallestPQ.getQty();
-
-                        int newMultiplicity = 0;
                         PurchasableQuantity newPQ = null;
-                        for(PurchasableQuantity pq : pqs) {
-                            
-                            float diff = qtyNeeded - pq.getQty();
-                            if(diff < 0) {
-                                newMultiplicity = findMult(pq, qtyNeeded);
-                                newPQ = pq;
-                            } else if(diff < smallestQty) {
-                                newMultiplicity = 1;
-                                newPQ = pq;
+                        int newMultiplicity = 0;
+                        
+                        if(pqs.size() == 1) {
+                            newPQ = pqs.get(0);
+                            newMultiplicity = findMult(newPQ, qtyNeeded);
+                        } else if (pqs.size() == 0) {
+                            print("Error: No purchasable quantities for item " + item.getId());
+                        } else {
+                            PurchasableQuantity smallestPQ = db.getSmallestPQ(item.getId());
+                            float smallestQty = smallestPQ.getQty();
+
+                            for(PurchasableQuantity pq : pqs) {
+                                
+                                int diff = (int) (pq.getQty() - qtyNeeded);
+                                if(diff < 0) {
+                                    newMultiplicity = findMult(pq, qtyNeeded);
+                                    newPQ = pq;
+                                    break;
+                                } else if(diff < smallestQty) {
+                                    newMultiplicity = 1;
+                                    newPQ = pq;
+                                    break;
+                                }
+                                
                             }
-                            
                         }
                         
                         if(newPQ == null) {
