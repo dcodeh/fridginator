@@ -24,7 +24,6 @@
                 <a href="./items" class="button">Items</a><br/>
                 <a href="./list" class="button">View List</a><br/>
                 <a href="./editMisc" class="button">Edit Misc List</a><br/>
-                <a href="./settings" class="button">Settings</a><br/>
                 <a href="./signOut" class="button">Sign Out</a><br/>
             </form>
 
