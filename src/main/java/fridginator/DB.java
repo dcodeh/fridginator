@@ -1304,7 +1304,7 @@ public class DB {
             Statement s = conn.createStatement();
             StringBuilder builder = new StringBuilder();
             builder
-                .append("select user_id, num, pq.qty, pq.item_id,")
+                .append("select user_id, num, pq.qty, pq.item_id, pq.price,")
                 .append("(select qty from inventory where item_id=pq.item_id order by time desc limit 1)")
                 .append(" from shared_list ")
                 .append("join purchasable_quantity pq on pq_id=pq.id ")
@@ -1316,25 +1316,41 @@ public class DB {
                 int num = set.getInt(2);
                 float qty = set.getFloat(3);
                 int itemID = set.getInt(4);
-                float oldQty = set.getFloat(5);
+                float price = set.getFloat(5);
+                float oldQty = set.getFloat(6);
                 float delta = num * qty;
+                float totalSpent = price * qty;
                 
                 StringBuilder invBuilder = new StringBuilder();
                 invBuilder
-                        .append("insert into inventory ")
-                        .append("(qty, point, restock, auto, time, user_id, item_id) values ")
-                        .append("(")
-                        .append(oldQty + delta)
-                        .append(",")
-                        .append("false,") // point
-                        .append("true,") // restock
-                        .append("false,") // auto
-                        .append("'" + timestampFormat.format(new Date()) + "',")
-                        .append(userID)
-                        .append(",")
-                        .append(itemID)
-                        .append(");");
+                    .append("insert into inventory ")
+                    .append("(qty, point, restock, auto, time, user_id, item_id) values ")
+                    .append("(")
+                    .append(oldQty + delta)
+                    .append(",")
+                    .append("false,") // point
+                    .append("true,") // restock
+                    .append("false,") // auto
+                    .append("'" + timestampFormat.format(new Date()) + "',")
+                    .append(userID)
+                    .append(",")
+                    .append(itemID)
+                    .append(");");
                 s.executeUpdate(invBuilder.toString());
+                
+                StringBuilder userBuilder = new StringBuilder();
+                userBuilder
+                    .append("update user set spent = spent + ")
+                    .append(totalSpent)
+                    .append(" where id = ")
+                    .append(userID)
+                    .append(";")
+                    .append("update user set saved = saved + ")
+                    .append(totalSpent)
+                    .append(" where id <> ")
+                    .append(userID)
+                    .append(";");
+                s.executeUpdate(userBuilder.toString());
             }
 
         } catch (SQLException sqle) {
