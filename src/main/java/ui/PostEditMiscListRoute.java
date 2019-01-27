@@ -16,6 +16,8 @@ import spark.*;
 public class PostEditMiscListRoute implements Route {
 
     private static final String LIST_TEXT = "listText";
+    private static final String SAVE_ACTION = "save";
+    private static final String MENU_ACTION = "menu";
 
     private final TemplateEngine te;
     private DB db;
@@ -41,7 +43,11 @@ public class PostEditMiscListRoute implements Route {
         db.wipeOutMiscList(userID);
         db.setMiscList(userID, newList);
 
-        response.redirect(WebServer.GET_EDIT_MISC);
+        if(request.queryParams(SAVE_ACTION) != null) {
+            response.redirect(WebServer.GET_EDIT_MISC);
+        } else if(request.queryParams(MENU_ACTION) != null) {
+            response.redirect(WebServer.MAIN_URL);
+        }
         return "";
     }
 

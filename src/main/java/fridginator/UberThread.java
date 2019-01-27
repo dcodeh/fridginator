@@ -34,7 +34,8 @@ public class UberThread extends TimerTask {
     @Override
     public void run() {
         if(db.getUberThreadLock()) {
-            print("uberthread running...");
+            print("[ " + DB.timestampFormat.format(new Date()) + "] " + 
+                  "uberthread running...");
 
             Calendar carl = Calendar.getInstance(); // I didn't mean to type that r, but I am glad that I did
             
