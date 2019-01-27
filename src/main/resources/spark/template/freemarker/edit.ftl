@@ -20,10 +20,8 @@
                 <form action="./updateMisc" method="POST">
                     <textarea name="listText"><#if listContents??>${listContents}</#if></textarea>
                     <!-- Bottom Buttons -->
-                    <button type="submit" name="save">Save</button>
-                    <!-- The user can find their own way back, since this
-                         page could be displayed in many contexts and I'm too
-                         lazy to make it any smarter -->
+                    <button type="submit" name="save">Save</button><br/>
+                    <button type="submit" name="menu">Menu</button>
                 </form>
             </div>
             
