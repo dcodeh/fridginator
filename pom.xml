@@ -86,7 +86,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>${maven.exec.version}</version>
         <configuration>
-          <mainClass>fridginator.Fridginator</mainClass>
+          <mainClass>fridginator.Launch</mainClass>
         </configuration>
       </plugin>
 
