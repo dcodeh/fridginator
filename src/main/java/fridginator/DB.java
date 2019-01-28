@@ -328,7 +328,7 @@ public class DB {
             StringBuilder builder = new StringBuilder();
 
             builder
-                .append("select i.name, checked, num, pq.qty, i.unit, pq.price from shared_list s")
+                .append("select i.name, checked, num, pq.qty, i.unit, pq.price, s.id from shared_list s")
                 .append(" join purchasable_quantity pq on pq.id=s.pq_id")
                 .append(" join item i on pq.item_id=i.id")
                 .append(" where s.user_id=")
