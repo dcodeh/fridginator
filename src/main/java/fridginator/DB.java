@@ -405,7 +405,7 @@ public class DB {
             builder
                 .append("update shared_list set checked = ")
                 .append(checked)
-                .append("where id = ")
+                .append(" where id = ")
                 .append(id)
                 .append(";");
 
