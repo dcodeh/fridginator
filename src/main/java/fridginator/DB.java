@@ -333,7 +333,7 @@ public class DB {
                 .append(" join item i on pq.item_id=i.id")
                 .append(" where s.user_id=")
                 .append(userID)
-                .append(" and s.confirmed=true;");
+                .append(" and s.confirmed='true';");
 
             ResultSet set = s.executeQuery(builder.toString());
             while(set.next()) {
