@@ -4,7 +4,8 @@ package fridginator;
 import model.InventoryItemResultObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
+import java.util.TimerTask;
 
 /**
  * This class defines a runnable object that automatically decrements item quantities
@@ -12,12 +13,10 @@ import java.util.concurrent.TimeUnit;
  *
  * @author dcodeh
  */
-public class InventoryRunnable implements Runnable {
+public class InventoryRunnable extends TimerTask {
 
     private DB db;
     private long hoursBetweenRunning;
-
-    private TimeUnit HOUR = TimeUnit.HOURS;
 
     public InventoryRunnable(DB db, long runFrequency) {
         this.db = db;
@@ -26,27 +25,34 @@ public class InventoryRunnable implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Inventory Thread starting up...");
-        ArrayList<InventoryItemResultObject> items = db.getAllItemsForInventoryUpdate();
+        if(db.getInventoryThreadLock()) {
+            Date running = new Date();
+            System.out.println(DB.timestampFormat.format(running) + " Inventory Thread starting up...");
+            ArrayList<InventoryItemResultObject> items = db.getAllItemsForInventoryUpdate();
 
-        if(items.isEmpty()) {
-            print("There is nothing to do -- Exiting"); // feels like python. heh
-            return;
-        }
+            if(items.isEmpty()) {
+                print("There is nothing to do -- Exiting"); // feels like python. heh
+                return;
+            }
 
-        print(items.size() + " items to update");
-        print("Run every " + hoursBetweenRunning + " hours");
+            print(items.size() + " items to update");
+            print("Run every " + hoursBetweenRunning + " hours");
 
-        for(InventoryItemResultObject i : items) {
-            // figure out how much was used since the last run
-            // convert units/week to num * (units/Hour)
-            float actual = i.getActualUsage();
-            float actualPerHour = actual / 168; // 168 = 7 * 24
-            float actualPerPeriod = actualPerHour * hoursBetweenRunning;
+            for(InventoryItemResultObject i : items) {
+                // figure out how much was used since the last run
+                // convert units/week to num * (units/Hour)
+                float actual = i.getActualUsage();
+                float actualPerHour = actual / 168; // 168 = 7 * 24
+                float actualPerPeriod = actualPerHour * hoursBetweenRunning;
 
-            print(i.getItemID() + ": decreasing by " + actualPerPeriod);
+                print(i.getItemID() + ": decreasing by " + actualPerPeriod);
 
-            db.autoDecrementInventory(i.getItemID(), actualPerPeriod);
+                db.autoDecrementInventory(i.getItemID(), actualPerPeriod);
+            }
+            
+            db.releaseInventoryThreadLock();
+        } else {
+            print("Another inventory thread is already running...exiting");
         }
     }
 

@@ -60,12 +60,18 @@ public class Launch {
         webServer.init();
         System.out.println("DONE");
 
-        InventoryRunnable inventoryRunnable = new InventoryRunnable(db, Constants.INVENTORY_THREAD_SLEEP);
-        ScheduledExecutorService inventoryExecutor = Executors.newScheduledThreadPool(1 /* only 1 thread*/);
-        inventoryExecutor.scheduleAtFixedRate(inventoryRunnable,
-                                              1l /* initialDelay*/,
-                                              Constants.INVENTORY_THREAD_SLEEP,
-                                              TimeUnit.HOURS);
+        TimerTask inventoryRunnable = new InventoryRunnable(db, Constants.INVENTORY_THREAD_SLEEP);
+        Timer inventoryTimer = new Timer();
+        
+        // run at 6 AM and every 6 hours after that
+        Calendar inventoryCal = Calendar.getInstance();
+        inventoryCal.set(Calendar.HOUR_OF_DAY, 23);
+        inventoryCal.set(Calendar.MINUTE, 59);
+        inventoryCal.set(Calendar.SECOND, 0);
+        inventoryCal.set(Calendar.MILLISECOND, 0);
+
+        Date initialInventoryRun = inventoryCal.getTime();
+        inventoryTimer.scheduleAtFixedRate(inventoryRunnable, initialInventoryRun, Constants.INVENTORY_THREAD_SLEEP_MILLIS);
 
         TimerTask uberThread = new UberThread(db);
         Timer timer = new Timer();

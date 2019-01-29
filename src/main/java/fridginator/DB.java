@@ -22,6 +22,7 @@ public class DB {
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     public static final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS"); // S is millisecond
     private boolean uberThreadRunning;
+    private boolean inventoryThreadRunning;
     
     public DB(Connection conn) {
         this.conn = conn;
@@ -958,7 +959,7 @@ public class DB {
             Statement s = conn.createStatement();
             StringBuilder builder = new StringBuilder();
             builder
-                    .append("select i.id, s.actual from item i join sharing s on s.item_id=i.id;");
+                    .append("select distinct i.id, s.actual from item i join sharing s on s.item_id=i.id;");
 
             ResultSet set = s.executeQuery(builder.toString());
             while(set.next()) {
@@ -1033,6 +1034,19 @@ public class DB {
      */
     public synchronized void releaseUberThreadLock() {
         uberThreadRunning = false;
+    }
+    
+    public synchronized boolean getInventoryThreadLock() {
+        if(inventoryThreadRunning) {
+            return false;
+        } else {
+            inventoryThreadRunning = true;
+            return true;
+        }
+    }
+    
+    public synchronized void releaseInventoryThreadLock() {
+        inventoryThreadRunning = false;
     }
 
     /**
