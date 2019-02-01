@@ -1318,11 +1318,11 @@ public class DB {
             Statement s = conn.createStatement();
             StringBuilder builder = new StringBuilder();
             builder
-                .append("select user_id, num, pq.qty, pq.item_id, pq.price,")
+                .append("select user_id, num, pq.qty, pq.item_id, pq.price,pq.id,")
                 .append("(select qty from inventory where item_id=pq.item_id order by time desc limit 1)")
                 .append(" from shared_list ")
                 .append("join purchasable_quantity pq on pq_id=pq.id ")
-                .append("where checked='true'");
+                .append("where checked=1");
             
             ResultSet set = s.executeQuery(builder.toString());
             while(set.next()) {
@@ -1331,7 +1331,8 @@ public class DB {
                 float qty = set.getFloat(3);
                 int itemID = set.getInt(4);
                 float price = set.getFloat(5);
-                float oldQty = set.getFloat(6);
+                int pqID = set.getInt(6);
+                float oldQty = set.getFloat(7);
                 float delta = num * qty;
                 float totalSpent = price * qty;
                 
@@ -1365,6 +1366,15 @@ public class DB {
                     .append(userID)
                     .append(";");
                 s.executeUpdate(userBuilder.toString());
+                
+                StringBuilder removeBuilder = new StringBuilder();
+                removeBuilder 
+                    .append("delete from shared_list where user_id = ")
+                    .append(userID)
+                    .append(" and pq_id = ")
+                    .append(pqID)
+                    .append(";");
+                s.executeUpdate(removeBuilder.toString());
             }
 
         } catch (SQLException sqle) {
